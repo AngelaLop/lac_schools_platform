@@ -35,7 +35,6 @@ STATUS_LABEL = {
     "not_a_school": "No es escuela",
     "aggregate": "Varias escuelas",
 }
-CONFIRM_OPTIONS = '"Sí, correcto,No, ver comentario"'
 CANDIDATE_OPTIONS = '"Sí,No"'
 
 
@@ -125,25 +124,31 @@ def build(iso: str, crosswalk: pd.DataFrame, schools: pd.DataFrame, notes: dict,
     ws.title = "Reconciliación"
     headers = ["Fila en su Excel", "Programa", "Nombre del programa", "Nombre en su Excel", "Año",
                "Estado", "Código escuela (Ministerio)", "Nombre en el listado del Ministerio",
-               "Distrito", "Ressort", "Latitud", "Longitud", "Duda o nota",
-               "Confirmación BID", "Comentario o código correcto"]
+               "Distrito", "Ressort", "Latitud", "Longitud", "Duda o nota"]
+    by_question = {q["id"]: q for q in questions}
     rows, highlight = [], []
     for _, r in crosswalk.iterrows():
         status = row_status(r)
         s = school_fields(schools, r["id_centro_final"])
         note = notes.get(r["intervention_id"], "")
+        # A row with a question lists every candidate, one per line, in the name cell.
+        q = by_question.get(r["intervention_id"])
+        if status == "question" and q and q.get("candidates"):
+            options = []
+            for sid in q["candidates"]:
+                c = school_fields(schools, sid)
+                options.append(f"{c['code']} {c['name']} ({c['ressort']}, {c['district']})")
+            options += q.get("extra_options", [])
+            s = {"name": "Opciones:\n" + "\n".join(f"{i}. {o}" for i, o in enumerate(options, start=1))}
         rows.append([
             int(r["intervention_id"].split("-R")[1]), r["program_code"], clean(r["program_name"]),
             clean(r["project_name"]), int(r["year"]) if pd.notna(r["year"]) else None, STATUS_LABEL[status],
             s.get("code"), s.get("name"), s.get("district"), s.get("ressort"), s.get("lat"), s.get("lon"),
-            note, None, None,
+            note,
         ])
         highlight.append(status in ("question", "aggregate"))
-    write_table(ws, 1, headers, rows, [9, 11, 18, 40, 7, 14, 13, 30, 13, 15, 10, 10, 50, 18, 30],
-                input_cols={14, 15}, highlight=highlight)
-    dv = DataValidation(type="list", formula1=CONFIRM_OPTIONS, allow_blank=True)
-    ws.add_data_validation(dv)
-    dv.add(f"N2:N{len(rows) + 1}")
+    write_table(ws, 1, headers, rows, [9, 11, 18, 40, 7, 14, 13, 45, 13, 15, 10, 10, 50],
+                input_cols=set(), highlight=highlight)
     n_recon = len(rows)
 
     # --- Dudas: candidates for each open question ----------------------------
@@ -172,10 +177,8 @@ def build(iso: str, crosswalk: pd.DataFrame, schools: pd.DataFrame, notes: dict,
         (None, None),
         ("Qué es", "Cada intervención del archivo «Overview Education Infrastructure» (septiembre de 2026) "
                    "junto a la escuela del listado del Ministerio de Educación (marzo de 2024) a la que la "
-                   "asignamos. El cruce se hizo por nombre, porque el archivo no trae código de escuela."),
-        ("Qué les pedimos", "Revisar la hoja «Reconciliación» y llenar las dos columnas amarillas. "
-                            "En la hoja «Dudas» marcar cuál de los candidatos es la escuela correcta."),
-        ("Filas resaltadas", "Las filas en naranja son las dudas que no podemos cerrar sin ustedes."),
+                   "asignamos. El cruce se hizo por nombre, el archivo no trae código de escuela."),
+        ("Filas resaltadas", "Las filas en naranja son las dudas sobre las sedes"),
         ("Coordenadas", "Latitud y longitud vienen del listado del Ministerio (grados decimales)."),
         (None, None),
         ("Resumen", None),
