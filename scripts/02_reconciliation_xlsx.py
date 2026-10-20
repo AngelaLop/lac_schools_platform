@@ -11,6 +11,8 @@ Usage: uv run python scripts/02_reconciliation_xlsx.py --country SUR
 
 import argparse
 import json
+from itertools import combinations
+from math import asin, cos, radians, sin, sqrt
 from pathlib import Path
 
 import pandas as pd
@@ -69,6 +71,21 @@ def row_status(r: pd.Series) -> str:
     if pd.notna(r["id_centro_final"]):
         return "assigned"
     return "question"
+
+
+def distance_km(schools: pd.DataFrame, a: str, b: str) -> float:
+    """Great-circle distance between two schools of the base."""
+    lat1, lon1, lat2, lon2 = map(radians, (schools.at[a, "lat"], schools.at[a, "lon"],
+                                           schools.at[b, "lat"], schools.at[b, "lon"]))
+    h = sin((lat2 - lat1) / 2) ** 2 + cos(lat1) * cos(lat2) * sin((lon2 - lon1) / 2) ** 2
+    return 2 * 6371 * asin(sqrt(h))
+
+
+def format_distance(km: float) -> str:
+    """Spanish style: '160 m' under one kilometre, '1,2 km' above."""
+    if km < 1:
+        return f"{round(km * 1000, -1):.0f} m"
+    return f"{km:.1f} km".replace(".", ",")
 
 
 def school_fields(schools: pd.DataFrame, sid) -> dict:
@@ -139,7 +156,13 @@ def build(iso: str, crosswalk: pd.DataFrame, schools: pd.DataFrame, notes: dict,
                 c = school_fields(schools, sid)
                 options.append(f"{c['code']} {c['name']} ({c['ressort']}, {c['district']})")
             options += q.get("extra_options", [])
-            s = {"name": "Opciones:\n" + "\n".join(f"{i}. {o}" for i, o in enumerate(options, start=1))}
+            text = "Opciones:\n" + "\n".join(f"{i}. {o}" for i, o in enumerate(options, start=1))
+            # Distances show the answer moves the point on the map.
+            pairs = list(combinations(enumerate(q["candidates"], start=1), 2))
+            if pairs:
+                text += "\nDistancia entre ellas:\n" + "\n".join(
+                    f"{i} y {j}: {format_distance(distance_km(schools, a, b))}" for (i, a), (j, b) in pairs)
+            s = {"name": text}
         rows.append([
             int(r["intervention_id"].split("-R")[1]), r["program_code"], clean(r["program_name"]),
             clean(r["project_name"]), int(r["year"]) if pd.notna(r["year"]) else None, STATUS_LABEL[status],
