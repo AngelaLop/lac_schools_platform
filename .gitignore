@@ -1,0 +1,20 @@
+# Raw inputs stay out of git: they are internal IDB files. Each one has a
+# *_manifest.json next to it that says where it came from.
+data/raw/**
+!data/raw/**/
+!data/raw/**/*_manifest.json
+
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+.next/
+.env*
+
+# Claude Code: instructions and local settings stay out of the repo.
+CLAUDE.md
+**/CLAUDE.md
+.claude/
+
+# Session handoff prompts: internal notes, kept on disk only.
+docs/prompt_*.md
