@@ -1,0 +1,10 @@
+[project]
+name = "lac-schools-platform"
+version = "0.1.0"
+description = "Per-country viewer of schools with IDB-financed infrastructure works"
+requires-python = ">=3.12"
+dependencies = [
+    "openpyxl>=3.1",
+    "pandas>=2.2",
+    "rapidfuzz>=3.9",
+]

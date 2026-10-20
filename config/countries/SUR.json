@@ -1,0 +1,67 @@
+{
+  "iso3": "SUR",
+  "name": "Suriname",
+  "language": "en",
+  "key": "id_centro",
+  "sources": {
+    "interventions": {
+      "path": "data/raw/SUR/Overview Education Infrastructure.xlsx",
+      "manifest": "data/raw/SUR/overview_education_infrastructure_manifest.json",
+      "sheet": 0,
+      "header_row": 3,
+      "columns": {
+        "program_code": "Program #",
+        "program_name": "Name",
+        "project_name": "Name of Project",
+        "works_description": "Descrition of works",
+        "amount": "Amount Invested",
+        "beneficiaries": "No. of Beneficiaries",
+        "year": "Year"
+      },
+      "currency": "USD"
+    },
+    "schools": {
+      "path": "../accessibility_platform/data/schools/AR/SUR/processed/SUR_total_cima.csv",
+      "origin": "accessibility_platform, pipeline/01_build_cima.py + 02_qc_coordinates.py, built from the ministry list 'Suriname School List_03202024.xlsx'",
+      "columns": {
+        "id": "id_centro",
+        "name": "nombre_centro",
+        "lat": "latitud",
+        "lon": "longitud",
+        "adm1": "adm1_pcode",
+        "adm2": "adm2_pcode",
+        "coordinate_quality": "coordinate_quality"
+      }
+    },
+    "school_details": {
+      "path": "../accessibility_platform/data/schools/AR/SUR/raw/Suriname School List_03202024.xlsx",
+      "origin": "Ministry of Education school list, March 2024; the source of the school base",
+      "columns": {
+        "id": "School code",
+        "district": "District",
+        "ressort": "Ressort",
+        "address": "Address"
+      }
+    }
+  },
+  "matching": {
+    "school_types": {
+      "OS": "O\\.?\\s*S\\.?",
+      "MULO": "MULO",
+      "EBGS": "EBGS",
+      "LBO": "LBO",
+      "VOJ": "VOJ"
+    },
+    "spelling_equivalences": [["OE", "U"], ["C", "K"]],
+    "strip_phrases": ["fencing of", "\\(denomination(?: school)?\\)", "\\bschool\\b"],
+    "non_school_patterns": ["\\bCENASU\\b", "\\blibrary\\b", "\\binspections?\\b", "\\bdepartment\\b", "\\bservice building\\b"],
+    "aggregate_patterns": ["\\b\\d+\\s+schools?\\b"],
+    "auto_min_score": 90,
+    "auto_min_margin": 10,
+    "candidate_min_score": 60
+  },
+  "layers": [
+    {"id": "schools", "source": "schools"},
+    {"id": "interventions", "source": "interventions", "group_by": "program_code"}
+  ]
+}

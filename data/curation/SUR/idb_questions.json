@@ -1,0 +1,27 @@
+{
+  "sent_to": "IDB Suriname team",
+  "date": "2026-10-20",
+  "notes": {
+    "SUR-R005": "Lo dejamos fuera del mapa de escuelas.",
+    "SUR-R007": "Duda 1. No hay ninguna escuela «Bacu» en el listado. La más parecida es G9013 O.S. Lebidoti dep. Bakoe, ya asignada a «OS Lebidotee». Ver hoja «Dudas».",
+    "SUR-R014": "Duda 5. Necesitamos la lista de las 119 escuelas, con código si lo tienen.",
+    "SUR-R025": "Lo dejamos fuera del mapa de escuelas.",
+    "SUR-R030": "Lo dejamos fuera del mapa de escuelas.",
+    "SUR-R031": "Lo dejamos fuera del mapa de escuelas.",
+    "SUR-R032": "Lo dejamos fuera del mapa de escuelas.",
+    "SUR-R033": "Duda 2. Hay dos escuelas Hanna's Lust. Ver hoja «Dudas».",
+    "SUR-R034": "Duda 3. Hay tres escuelas en Houttuin. Ver hoja «Dudas».",
+    "SUR-R036": "Asignada por el número: 1 = O.S. I Houttuin. Por favor confirmar.",
+    "SUR-R037": "Asignada por el número: 2 = O.S. II Houttuin. Por favor confirmar.",
+    "SUR-R038": "Duda 4. El listado no tiene una O.S. I Koewarasan. Ver hoja «Dudas».",
+    "SUR-R040": "Duda 6. Necesitamos la lista de las 113 escuelas, con código si lo tienen."
+  },
+  "questions": [
+    {"id": "SUR-R007", "question": "¿«Bacu» es la sede Bakoe de esta escuela o es otra escuela? Si es otra, ¿tienen su código o ubicación?", "candidates": ["G9013"]},
+    {"id": "SUR-R033", "question": "¿A cuál de las dos escuelas se le hizo el cerco?", "candidates": ["G2056", "L2010"]},
+    {"id": "SUR-R034", "question": "¿A cuál de las tres escuelas se le hizo el cerco?", "candidates": ["G2010", "G2011", "M2018"]},
+    {"id": "SUR-R038", "question": "¿Cuál de las dos es «Koewarasan 1»? Las dos tienen la misma coordenada en el listado.", "candidates": ["G2026", "G2065"]},
+    {"id": "SUR-R014", "question": "Necesitamos la lista de las 119 escuelas, con código si lo tienen.", "candidates": []},
+    {"id": "SUR-R040", "question": "Necesitamos la lista de las 113 escuelas, con código si lo tienen.", "candidates": []}
+  ]
+}
