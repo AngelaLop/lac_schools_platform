@@ -124,7 +124,7 @@ def build(iso: str, crosswalk: pd.DataFrame, schools: pd.DataFrame, notes: dict,
     ws = wb.active
     ws.title = "Reconciliación"
     headers = ["Fila en su Excel", "Programa", "Nombre del programa", "Nombre en su Excel", "Año",
-               "Monto (USD)", "Estado", "Código escuela (Ministerio)", "Nombre en el listado del Ministerio",
+               "Estado", "Código escuela (Ministerio)", "Nombre en el listado del Ministerio",
                "Distrito", "Ressort", "Latitud", "Longitud", "Duda o nota",
                "Confirmación BID", "Comentario o código correcto"]
     rows, highlight = [], []
@@ -134,19 +134,16 @@ def build(iso: str, crosswalk: pd.DataFrame, schools: pd.DataFrame, notes: dict,
         note = notes.get(r["intervention_id"], "")
         rows.append([
             int(r["intervention_id"].split("-R")[1]), r["program_code"], clean(r["program_name"]),
-            clean(r["project_name"]), int(r["year"]) if pd.notna(r["year"]) else None,
-            float(r["amount"]) if pd.notna(r["amount"]) else None, STATUS_LABEL[status],
+            clean(r["project_name"]), int(r["year"]) if pd.notna(r["year"]) else None, STATUS_LABEL[status],
             s.get("code"), s.get("name"), s.get("district"), s.get("ressort"), s.get("lat"), s.get("lon"),
             note, None, None,
         ])
         highlight.append(status in ("question", "aggregate"))
-    write_table(ws, 1, headers, rows, [9, 11, 18, 40, 7, 14, 14, 13, 30, 13, 15, 10, 10, 50, 18, 30],
-                input_cols={15, 16}, highlight=highlight)
-    for i in range(2, len(rows) + 2):
-        ws.cell(row=i, column=6).number_format = "#,##0.00"
+    write_table(ws, 1, headers, rows, [9, 11, 18, 40, 7, 14, 13, 30, 13, 15, 10, 10, 50, 18, 30],
+                input_cols={14, 15}, highlight=highlight)
     dv = DataValidation(type="list", formula1=CONFIRM_OPTIONS, allow_blank=True)
     ws.add_data_validation(dv)
-    dv.add(f"O2:O{len(rows) + 1}")
+    dv.add(f"N2:N{len(rows) + 1}")
     n_recon = len(rows)
 
     # --- Dudas: candidates for each open question ----------------------------
@@ -188,23 +185,15 @@ def build(iso: str, crosswalk: pd.DataFrame, schools: pd.DataFrame, notes: dict,
         cell = wr.cell(row=i, column=2, value=b)
         cell.font = Font(name=FONT, size=10)
         cell.alignment = Alignment(wrap_text=True, vertical="top")
-    rng = f"'Reconciliación'!$G$2:$G${n_recon + 1}"
-    amt = f"'Reconciliación'!$F$2:$F${n_recon + 1}"
-    summary = [("Intervenciones", f"=COUNTA({rng})", f"=SUM({amt})")]
-    summary += [(label, f'=COUNTIF({rng},"{label}")', f'=SUMIF({rng},"{label}",{amt})')
-                for label in STATUS_LABEL.values()]
+    rng = f"'Reconciliación'!$F$2:$F${n_recon + 1}"
+    summary = [("Intervenciones", f"=COUNTA({rng})")]
+    summary += [(label, f'=COUNTIF({rng},"{label}")') for label in STATUS_LABEL.values()]
     start = len(lines) + 1
-    for c, h in enumerate(["", "Filas", "Monto (USD)"], start=1):
-        cell = wr.cell(row=start, column=c, value=h or None)
-        cell.font = Font(name=FONT, bold=True, size=10)
-    wr.column_dimensions["C"].width = 16
-    for i, (label, count, total) in enumerate(summary, start=start + 1):
+    wr.cell(row=start, column=2, value="Filas").font = Font(name=FONT, bold=True, size=10)
+    for i, (label, count) in enumerate(summary, start=start + 1):
         wr.cell(row=i, column=1, value=label).font = Font(name=FONT, size=10, bold=(label == "Intervenciones"))
         wr.cell(row=i, column=2, value=count).font = Font(name=FONT, size=10)
         wr.cell(row=i, column=2).alignment = Alignment(horizontal="left")
-        c = wr.cell(row=i, column=3, value=total)
-        c.font = Font(name=FONT, size=10)
-        c.number_format = "#,##0"
     return wb
 
 
