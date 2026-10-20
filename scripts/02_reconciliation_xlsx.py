@@ -2,9 +2,9 @@
 
 Reads the crosswalk from step 01 and the school base, and writes
 results/{ISO}/{ISO}_reconciliacion_sedes.xlsx (in Spanish, for the IDB team):
-one sheet with every intervention next to the school we assigned, and one with
-the candidates for each open question. Rows with a question are highlighted and
-the IDB fills the yellow columns.
+one sheet with every intervention next to the school we assigned. Rows with a
+question are highlighted and list every candidate school, with the distance
+between them, in a single cell.
 
 Usage: uv run python scripts/02_reconciliation_xlsx.py --country SUR
 """
@@ -19,7 +19,6 @@ import pandas as pd
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
-from openpyxl.worksheet.datavalidation import DataValidation
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -37,7 +36,6 @@ STATUS_LABEL = {
     "not_a_school": "No es escuela",
     "aggregate": "Varias escuelas",
 }
-CANDIDATE_OPTIONS = '"Sí,No"'
 
 
 def clean(text) -> str:
@@ -173,23 +171,6 @@ def build(iso: str, crosswalk: pd.DataFrame, schools: pd.DataFrame, notes: dict,
     write_table(ws, 1, headers, rows, [9, 11, 18, 40, 7, 14, 13, 45, 13, 15, 10, 10, 50],
                 input_cols=set(), highlight=highlight)
     n_recon = len(rows)
-
-    # --- Dudas: candidates for each open question ----------------------------
-    wq = wb.create_sheet("Dudas")
-    headers = ["Duda", "Nombre en su Excel", "Pregunta", "Código candidato", "Nombre en el listado del Ministerio",
-               "Distrito", "Ressort", "Dirección", "Latitud", "Longitud", "¿Es esta? (Sí / No)", "Comentario"]
-    rows = []
-    for n, q in enumerate(questions, start=1):
-        project = clean(crosswalk.set_index("intervention_id").at[q["id"], "project_name"])
-        for sid in q.get("candidates") or [None]:
-            s = school_fields(schools, sid)
-            rows.append([n, project, q["question"], s.get("code"), s.get("name"), s.get("district"),
-                         s.get("ressort"), s.get("address"), s.get("lat"), s.get("lon"), None, None])
-    write_table(wq, 1, headers, rows, [7, 30, 55, 12, 30, 13, 15, 24, 10, 10, 14, 30],
-                input_cols={11, 12}, highlight=[True] * len(rows))
-    dv2 = DataValidation(type="list", formula1=CANDIDATE_OPTIONS, allow_blank=True)
-    wq.add_data_validation(dv2)
-    dv2.add(f"K2:K{len(rows) + 1}")
 
     # --- Léeme -----------------------------------------------------------------
     wr = wb.create_sheet("Léeme", 0)
