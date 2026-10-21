@@ -5,7 +5,7 @@
     "SUR-R005": "Lo dejamos fuera del mapa de escuelas.",
     "SUR-R007": "Respondida: Bacu es O.S. Bakoe, la misma escuela que Lebidoti en otro sitio (preescolar). Ubicada en el punto G9013A del anexo ICT.",
     "SUR-R014": "Recibida la lista (Anexo IX, PDF): 110 escuelas en 4 distritos del interior, no 119. 105 quedan en el mapa; 5 sin ubicación. El PDF no trae monto por escuela (todas las celdas de costo dicen $0,00).",
-    "SUR-R021": "Asignada a O.S. Manlobi (G0008) por el nombre. El anexo ICT trae «O.S. Manlobi» (G0008) y «O.S. Malobi» (sin código, otras coordenadas) como dos escuelas. Por favor confirmar a cuál corresponde «Malobi».",
+    "SUR-R021": "Asignada a O.S. Malobi, el sitio sin código del anexo ICT (03 39 16 N, 54 55 31 W), y no a O.S. Manlobi (G0008).",
     "SUR-R025": "Lo dejamos fuera del mapa de escuelas.",
     "SUR-R030": "Lo dejamos fuera del mapa de escuelas.",
     "SUR-R031": "Lo dejamos fuera del mapa de escuelas.",
@@ -17,21 +17,8 @@
     "SUR-R038": "Confirmada por el anexo ICT: «O.S Koewarasan 1», código G2026.",
     "SUR-R040": "Recibida la lista (anexo y lotes de licitación ICT): 113 escuelas. 112 quedan en el mapa. El presupuesto por escuela cubre los lotes 1 a 4 (USD 3.762.500); el lote 5 no tiene presupuesto (#REF! en el archivo)."
   },
-  "to_confirm": [
-    "SUR-R021"
-  ],
-  "questions": [
-    {
-      "id": "SUR-R021",
-      "question": "¿«Malobi» es O.S. Manlobi (G0008) o la O.S. Malobi sin código que aparece en el anexo ICT?",
-      "candidates": [
-        "G0008"
-      ],
-      "extra_options": [
-        "O.S. Malobi del anexo ICT (sin código, 03 39 16 N, 54 55 31 W)"
-      ]
-    }
-  ],
+  "to_confirm": [],
+  "questions": [],
   "list_questions": [
     {
       "list": "SUR-R014",
