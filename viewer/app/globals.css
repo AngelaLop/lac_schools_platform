@@ -130,7 +130,7 @@ body {
   }
   /* Above the sheet's peek (PEEK_PX in components/Sheet.tsx). */
   .maplibregl-ctrl-bottom-right {
-    bottom: 280px;
+    bottom: 176px;
   }
 }
 

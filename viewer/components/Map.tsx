@@ -50,7 +50,8 @@ function columnPx(): number {
 /** Room for the panels that sit over the map; on a phone they sit below it. */
 function pad(m: maplibregl.Map, kind: "country" | "district" | "school" | "frame"): maplibregl.PaddingOptions {
   // On a phone the title bar sits on top and the sheet's peek at the bottom.
-  if (m.getContainer().clientWidth < 768) return { top: 80, bottom: PEEK_PX + 20, left: 24, right: 24 };
+  // The folded legend tab sits under the title bar, on the left edge.
+  if (m.getContainer().clientWidth < 768) return { top: 116, bottom: PEEK_PX + 20, left: 24, right: 24 };
   const left = columnPx() + 40;
   if (kind === "school") return { left: left - 20, right: 380, top: 0, bottom: 40 };
   if (kind === "district") return { top: 60, bottom: 60, left: left + 20, right: 60 };
@@ -196,7 +197,7 @@ export default function Map({ data, active, lists, selected, district, onSelect,
       style: STYLE,
       bounds: [[w, s], [e, n]],
       fitBoundsOptions: { padding: div.current.clientWidth < 768
-        ? { top: 80, bottom: PEEK_PX + 20, left: 24, right: 24 } : { top: 40, bottom: 110, left: columnPx() + 40, right: 60 } },
+        ? { top: 116, bottom: PEEK_PX + 20, left: 24, right: 24 } : { top: 40, bottom: 40, left: columnPx() + 40, right: 60 } },
       attributionControl: { compact: true },
       maxPitch: 60,
     });
@@ -466,7 +467,7 @@ export default function Map({ data, active, lists, selected, district, onSelect,
       {/* Inline: maplibre-gl.css sets the container to position: relative. */}
       <div ref={div} style={{ position: "absolute", inset: 0 }} />
       {badge("n", "left-1/2 top-3 -translate-x-1/2 max-md:top-[118px]", "▲")}
-      {badge("s", "left-1/2 bottom-[60px] -translate-x-1/2 max-md:bottom-[290px]", "▼")}
+      {badge("s", "left-1/2 bottom-[60px] -translate-x-1/2 max-md:bottom-[180px]", "▼")}
       {badge("w", "left-[calc(380px*var(--ui)+20px)] top-1/2 -translate-y-1/2 max-md:left-2", "◀")}
       {badge("e", "right-3 top-1/2 -translate-y-1/2", "▶")}
     </div>

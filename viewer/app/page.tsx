@@ -112,7 +112,7 @@ export default function Page() {
     <>
       <Map data={data} active={active} lists={lists} selected={selected} district={filter.district} onSelect={onSelect}
         onHome={onHome} />
-      <Legend data={data} filter={filter} layers={layers} lists={lists} onToggle={onToggle} />
+      <Legend data={data} filter={filter} layers={layers} lists={lists} onToggle={onToggle} compact={isMobile} />
     </>
   );
 
@@ -132,7 +132,7 @@ export default function Page() {
           </div>
         </header>
         <div className="absolute inset-0">{map}</div>
-        <OffMapNotice data={data} filter={filter} layers={layers} className="absolute inset-x-2 top-[150px] z-10" />
+        <OffMapNotice data={data} filter={filter} layers={layers} className="absolute inset-x-2 top-[116px] z-10" />
         <Sheet snap={snap} onSnap={setSnap}>
           {selected ? (
             <SchoolCard data={data} id={selected} onClose={() => { setSelected(null); setSnap("peek"); }} />
@@ -222,21 +222,50 @@ function useIsMobile() {
 
 /** The pins, one line per program with its count of schools under the
  *  current filter; then the school lists, each a layer turned on with its box,
- *  as the "Add selections" boxes of Arctic Spills. */
-function Legend({ data, filter, layers, lists, onToggle }: {
-  data: Dataset; filter: Filter; layers: Set<string>; lists: Record<string, Set<string>>; onToggle: (key: string) => void;
+ *  as the "Add selections" boxes of Arctic Spills. On a phone (`compact`) it
+ *  folds into a tab on the left edge, so it does not cover the coast where
+ *  most schools are; it opens with a tap and folds back once a box changes. */
+function Legend({ data, filter, layers, lists, onToggle, compact = false }: {
+  data: Dataset; filter: Filter; layers: Set<string>; lists: Record<string, Set<string>>;
+  onToggle: (key: string) => void; compact?: boolean;
 }) {
+  const [open, setOpen] = useState(!compact);
+  useEffect(() => setOpen(!compact), [compact]);
+  const toggle = (key: string) => {
+    onToggle(key);
+    // A short wait, so the tick shows before the legend slides away.
+    if (compact) setTimeout(() => setOpen(false), 450);
+  };
   const order = data.country.programs;
   const rows = applyFilter(data.interventions, { ...filter, program: null });
   const pinned = new Set(data.schools.filter((s) => s.own).map((s) => s.program));
   const schools = (code: string) => new Set(rows.filter((r) => isOwn(r) && r.program === code && r.school).map((r) => r.school)).size;
   const iconed = new Set(Object.values(lists).flatMap((s) => [...s]));
   const others = data.schools.filter((s) => s.in_base && !s.own && !iconed.has(s.id)).length;
+  if (compact && !open) {
+    return (
+      <button onClick={() => setOpen(true)} aria-expanded={false} aria-label="Open the map legend"
+        className="absolute left-0 top-[64px] z-10 flex min-h-11 items-center gap-1.5 rounded-r-full bg-white/95 py-1 pl-2 pr-3 text-[12px] font-medium shadow-sm"
+        style={{ color: "var(--ink-2)" }}>
+        {data.programs.filter((p) => pinned.has(p.code)).map((p) => (
+          <span key={p.code} className="inline-flex w-[11px] justify-center"
+            dangerouslySetInnerHTML={{ __html: pinSvg(programColor(p.code, order), 0.38) }} />
+        ))}
+        Legend
+        {layers.size > 0 && <span className="num text-[11px]" style={{ color: "var(--ink-3)" }}>({layers.size} on)</span>}
+        <span aria-hidden style={{ color: "var(--ink-3)" }}>›</span>
+      </button>
+    );
+  }
   return (
     // The box sits at its place on the screen; its content is drawn at the interface scale.
     <div className="absolute left-[calc(380px*var(--ui)+24px)] top-3 z-10 max-md:left-2 max-md:top-[64px]">
-    <div className="ui-scale bg-white/90 px-3 py-2 text-[11px] shadow-sm max-md:px-2 max-md:py-1.5"
+    <div className="ui-scale relative bg-white/90 px-3 py-2 text-[11px] shadow-sm max-md:bg-white/95 max-md:py-1.5 max-md:pl-2 max-md:pr-10"
       style={{ color: "var(--ink-2)" }}>
+      {compact && (
+        <button onClick={() => setOpen(false)} aria-label="Fold the map legend"
+          className="absolute right-0 top-0 flex h-11 w-11 items-center justify-center text-[16px]" style={{ color: "var(--ink-3)" }}>‹</button>
+      )}
       {data.programs.map((p) => {
         // The school lists of the program sit under it, indented.
         const own = (data.country.list_layers ?? []).filter((l) => data.interventions.find((r) => r.id === l.key)?.program === p.code);
@@ -257,7 +286,7 @@ function Legend({ data, filter, layers, lists, onToggle }: {
               const when = parent?.year ? (isPlanned(parent.year) ? `planned ${parent.year}` : String(parent.year)) : "";
               return (
                 <label key={l.key} className="ml-[18px] mt-0.5 flex cursor-pointer items-center gap-1.5 max-md:min-h-9">
-                  <input type="checkbox" checked={layers.has(l.key)} onChange={() => onToggle(l.key)}
+                  <input type="checkbox" checked={layers.has(l.key)} onChange={() => toggle(l.key)}
                     className="h-3 w-3 accent-[var(--line)]" />
                   <span className="inline-flex w-[12px] justify-center"
                     dangerouslySetInnerHTML={{ __html: iconSvg(l.icon, programColor(p.code, order), 0.6) }} />
