@@ -77,10 +77,16 @@ body {
 
 /* The interface scale. Panels, legend, notice and footer draw their content
    at this scale (.ui-scale), and the map leaves room for them (columnPx in
-   components/Map.tsx). It stays at 1; the map is never scaled, since a CSS
-   zoom over its canvas would shift the mouse positions MapLibre reads. */
+   components/Map.tsx). On desktop it is 0.9: the owner preferred the viewer
+   as it looks in Chrome at 90%. The map itself stays at 1, since a CSS zoom
+   over the map canvas would shift the mouse positions MapLibre reads. */
 :root {
   --ui: 1;
+}
+@media (min-width: 768px) {
+  :root {
+    --ui: 0.9;
+  }
 }
 .ui-scale {
   zoom: var(--ui);
