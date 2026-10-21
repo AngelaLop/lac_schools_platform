@@ -1,0 +1,6 @@
+# The viewer data is out of git (built by scripts/03_viewer_data.py) but must
+# reach Vercel, so this file lists what to skip instead of .gitignore.
+node_modules
+.next
+.vercel
+*.tsbuildinfo
