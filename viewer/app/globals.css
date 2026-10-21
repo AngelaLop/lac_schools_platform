@@ -77,16 +77,10 @@ body {
 
 /* The interface scale. Panels, legend, notice and footer draw their content
    at this scale (.ui-scale), and the map leaves room for them (columnPx in
-   components/Map.tsx). On desktop it is 0.9: the owner preferred the viewer
-   as it looks in Chrome at 90%. The map itself stays at 1, since a CSS zoom
-   over the map canvas would shift the mouse positions MapLibre reads. */
+   components/Map.tsx). It stays at 1; the map is never scaled, since a CSS
+   zoom over its canvas would shift the mouse positions MapLibre reads. */
 :root {
   --ui: 1;
-}
-@media (min-width: 768px) {
-  :root {
-    --ui: 0.9;
-  }
 }
 .ui-scale {
   zoom: var(--ui);
@@ -134,10 +128,13 @@ body {
   }
 }
 
-/* Very short screens (a 1366 x 768 laptop leaves about 660 px): the last
-   savings so the year chart and the program list still fit without scrolling.
-   Written here, after Tailwind's own rules, so they win over the 820 px step. */
-@media (max-height: 700px) {
+/* Very short screens: the last savings so the year chart and the program list
+   still fit without scrolling. The panel tightens only on short windows (this
+   630 px step and the 738 px one in the components): with higher steps a
+   laptop at 100% lost the room between the year chart and the program list,
+   which read cramped. Written here, after Tailwind's own rules, so they win
+   over the 738 px step. */
+@media (max-height: 630px) {
   .year-chart {
     height: 3rem;
   }

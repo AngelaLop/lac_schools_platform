@@ -15,7 +15,7 @@ export function Section({ title, note, children, collapsible = false, defaultOpe
     <h2 className="text-[11px] font-medium uppercase tracking-wider" style={{ color: "var(--ink-2)" }}>{title}</h2>
   );
   return (
-    <section className="fold-section border-t px-4 py-3 [@media(max-height:820px)]:py-2" style={{ borderColor: "var(--rule)" }}>
+    <section className="fold-section border-t px-4 py-3 [@media(max-height:738px)]:py-2" style={{ borderColor: "var(--rule)" }}>
       {collapsible ? (
         <button onClick={() => setOpen(!open)} aria-expanded={open}
           className="flex w-full items-center justify-between gap-2 text-left max-md:min-h-11">
@@ -44,7 +44,7 @@ export function FoldCard({ title, subtitle, children, defaultOpen = false, flat 
         <span>
           <span className="block text-[13px] font-medium">{title}</span>
           {/* On short screens the subtitle goes, so the year and program charts above keep their room. */}
-          <span className="block text-[11px] [@media(max-height:720px)]:hidden" style={{ color: "var(--ink-3)" }}>{subtitle}</span>
+          <span className="block text-[11px] [@media(max-height:648px)]:hidden" style={{ color: "var(--ink-3)" }}>{subtitle}</span>
         </span>
         <Chevron open={open} />
       </button>

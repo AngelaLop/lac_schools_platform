@@ -165,7 +165,7 @@ export default function Page() {
           <div className="ui-scale flex w-full flex-col gap-2 pb-1">
             <div className="overflow-hidden bg-white shadow-lg">
               {/* As in Arctic Spills: the mark spans the title and the lines under it. */}
-              <header className="flex items-center gap-3 px-4 py-2.5 [@media(max-height:820px)]:py-2" style={{ background: "var(--line)", color: "#fff" }}>
+              <header className="flex items-center gap-3 px-4 py-2.5 [@media(max-height:738px)]:py-2" style={{ background: "var(--line)", color: "#fff" }}>
                 <BrandPin height={46} />
                 <div className="min-w-0">
                   <h1 className="brand text-[22px] leading-none">{data.country.title}</h1>

@@ -41,7 +41,7 @@ export default function Dashboard({ data, filter, years, onFilter, onDistrict, o
 
   return (
     <div className="flex flex-col">
-      <div className="px-4 pb-2 pt-2.5 [@media(max-height:820px)]:pb-1 [@media(max-height:820px)]:pt-2">
+      <div className="px-4 pb-2 pt-2.5 [@media(max-height:738px)]:pb-1 [@media(max-height:738px)]:pt-2">
         {/* The how-to shows on hover (or focus, or a tap on a phone), so it takes no line of its own. */}
         <h2 tabIndex={0} className="group relative inline-block cursor-help text-[13px] font-medium outline-offset-2">
           Investment by
@@ -54,7 +54,7 @@ export default function Dashboard({ data, filter, years, onFilter, onDistrict, o
       </div>
       {/* Years --------------------------------------------------------------- */}
       <Section title="Year" collapsible>
-        <div className="year-chart flex h-24 items-end gap-[3px] [@media(max-height:820px)]:h-16">
+        <div className="year-chart flex h-24 items-end gap-[3px] [@media(max-height:738px)]:h-16">
           {perYear.map((y) => {
             const total = y.parts.reduce((a, p) => a + p.amount, 0);
             return (
@@ -94,13 +94,13 @@ export default function Dashboard({ data, filter, years, onFilter, onDistrict, o
 
       {/* Programs ------------------------------------------------------------ */}
       <Section title="Program" collapsible>
-        <ul className="space-y-1 [@media(max-height:820px)]:space-y-0.5">
+        <ul className="space-y-1 [@media(max-height:738px)]:space-y-0.5">
           {progs.map((p) => {
             const on = filter.program == null || filter.program === p.code;
             return (
               <li key={p.code}>
                 <button onClick={() => onFilter({ ...filter, program: filter.program === p.code ? null : p.code })}
-                  className="w-full rounded-sm px-1 py-1 text-left hover:bg-[var(--panel)] [@media(max-height:820px)]:py-0.5"
+                  className="w-full rounded-sm px-1 py-1 text-left hover:bg-[var(--panel)] [@media(max-height:738px)]:py-0.5"
                   style={{ opacity: on ? 1 : 0.4, background: filter.program === p.code ? "var(--panel)" : undefined }}>
                   <div className="flex items-baseline justify-between gap-2 text-[12px]">
                     <span className="flex items-center gap-1.5">
@@ -113,7 +113,7 @@ export default function Dashboard({ data, filter, years, onFilter, onDistrict, o
                       <span className="text-[11px]" style={{ color: "var(--ink-3)" }}>({p.projects} {p.projects === 1 ? "project" : "projects"})</span>
                     </span>
                   </div>
-                  <div className="prog-bar mt-1.5 h-2 w-full rounded-full [@media(max-height:820px)]:mt-0.5 [@media(max-height:820px)]:h-1.5" style={{ background: "var(--rule)" }}>
+                  <div className="prog-bar mt-1.5 h-2 w-full rounded-full [@media(max-height:738px)]:mt-0.5 [@media(max-height:738px)]:h-1.5" style={{ background: "var(--rule)" }}>
                     <div className="h-full rounded-full" style={{ width: `${(100 * p.amount) / maxProg}%`, background: programColor(p.code, order) }} />
                   </div>
                 </button>
@@ -164,7 +164,7 @@ export default function Dashboard({ data, filter, years, onFilter, onDistrict, o
 function Kpi({ value, label, hint }: { value: string; label: string; hint?: string }) {
   return (
     <div title={hint}>
-      <p className="num text-[20px] font-medium leading-none [@media(max-height:820px)]:text-[18px]" style={{ color: "var(--ink)" }}>{value}</p>
+      <p className="num text-[20px] font-medium leading-none [@media(max-height:738px)]:text-[18px]" style={{ color: "var(--ink)" }}>{value}</p>
       <p className="mt-0.5 leading-tight">{label}</p>
     </div>
   );
@@ -219,13 +219,13 @@ export function Headline({ data, filter, years, layers, onFilter }: {
   const progName = filter.program ? programs.find((p) => p.code === filter.program)?.name : null;
   const distName = filter.district ? data.schools.find((x) => x.adm1 === filter.district)?.district : null;
   return (
-    <div className="px-4 pb-2.5 pt-2.5 [@media(max-height:820px)]:pb-2 [@media(max-height:820px)]:pt-2">
+    <div className="px-4 pb-2.5 pt-2.5 [@media(max-height:738px)]:pb-2 [@media(max-height:738px)]:pt-2">
       <p className="text-[10px] uppercase tracking-wider" style={{ color: "var(--ink-3)" }}>
         Amount {period}{progName || distName ? ` (${[progName, distName].filter(Boolean).join(", ")})` : ""}
       </p>
       {/* A div, not a p: the info popup inside is a block. */}
       <div className="flex items-center gap-2">
-        <span className="num text-[32px] font-medium leading-none [@media(max-height:820px)]:text-[28px]" title={moneyFull(t.amount, currency)}>
+        <span className="num text-[32px] font-medium leading-none [@media(max-height:738px)]:text-[28px]" title={moneyFull(t.amount, currency)}>
           {money(t.amount, currency)}
         </span>
         <OffMapInfo data={data} filter={filter} />
@@ -239,7 +239,7 @@ export function Headline({ data, filter, years, layers, onFilter }: {
       ) : (
         <p className="mt-1 text-[11px]" style={{ color: "var(--ink-2)" }}>No projects in the IDB sheet for {period.replace("in ", "")}.</p>
       )}
-      <div className="mt-2 grid grid-cols-3 gap-2 text-[11px] [@media(max-height:820px)]:mt-1.5" style={{ color: "var(--ink-2)" }}>
+      <div className="mt-2 grid grid-cols-3 gap-2 text-[11px] [@media(max-height:738px)]:mt-1.5" style={{ color: "var(--ink-2)" }}>
         <Kpi value={int(t.projects)} label="projects" />
         <Kpi value={int(t.schools)} label={`of ${int(data.schools.filter((s) => s.in_base).length)} schools`}
           hint="Schools with projects, on the map, out of all the schools in the ministry list. The count includes the few sites of the IDB lists that the ministry list does not have." />
