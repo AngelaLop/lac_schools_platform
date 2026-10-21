@@ -22,9 +22,9 @@
   --panel: #f6f9f8;
   --ink: #1c282c;
   --ink-2: #4f5d61;
-  --ink-3: #829094;
+  --ink-3: #5f6d71;
   --rule: #dde5e3;
-  --accent: #2aa7c9;
+  --accent: #1b7f9b;
 
   --school: #93a2a6;
   --prog-1: #1d5aa6;
@@ -41,7 +41,7 @@ body {
 body {
   background: var(--sea);
   color: var(--ink);
-  font-family: "Satoshi", system-ui, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.45;
 }
@@ -75,9 +75,28 @@ body {
   font-size: 10px;
 }
 
-/* The timeline ticks that have already played, as in Arctic Spills. */
-.tick-past {
-  background: var(--line);
+/* The interface scale. Panels draw their content at this scale (.ui-scale)
+   and the map leaves room for them (columnPx in components/Map.tsx). It stays
+   at 1 on every screen: at 1.15 above 1600 px the left panel read too wide. */
+:root {
+  --ui: 1;
+}
+.ui-scale {
+  zoom: var(--ui);
+}
+
+/* A visible focus ring for keyboard users, on every control. */
+:focus-visible {
+  outline: 2px solid var(--line);
+  outline-offset: 2px;
+}
+
+/* Desktop: the scale and the attribution sit clear of the notice band at
+   the bottom of the map. */
+@media (min-width: 768px) {
+  .maplibregl-ctrl-bottom-right {
+    bottom: 12px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -98,8 +117,29 @@ body {
   .maplibregl-ctrl-scale {
     display: none;
   }
+  .ctrl-home button {
+    width: 44px;
+    height: 44px;
+  }
   /* Above the sheet's peek (PEEK_PX in components/Sheet.tsx). */
   .maplibregl-ctrl-bottom-right {
-    bottom: 250px;
+    bottom: 280px;
+  }
+}
+
+/* Very short screens (a 1366 x 768 laptop leaves about 660 px): the last
+   savings so the year chart and the program list still fit without scrolling.
+   Written here, after Tailwind's own rules, so they win over the 820 px step. */
+@media (max-height: 700px) {
+  .year-chart {
+    height: 3rem;
+  }
+  .fold-section {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+  }
+  /* The program rows keep their name, colour and amount; the bar goes. */
+  .prog-bar {
+    display: none;
   }
 }

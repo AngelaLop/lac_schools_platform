@@ -9,30 +9,37 @@ const AREAS = ["urbana", "no_urbana", "dispersa"] as const;
 
 /** Who the works reach: the schools with works against all schools, by wealth
  *  and by settlement. Its own card, folded by default, under the main panel. */
-export default function ContextCard({ data, filter }: { data: Dataset; filter: Filter }) {
+export default function ContextCard({ data, filter, flat = false }: { data: Dataset; filter: Filter; flat?: boolean }) {
   const placed = activeSchools(data.interventions, filter);
   const rwi = compare(data.schools, placed, (s) => s.rwi_q, QUINTILES);
   const area = compare(data.schools, placed, (s) => s.area, [...AREAS]);
+  const noCellAll = data.schools.filter((s) => s.in_base && !s.cell).length;
+  const farAll = rwi.missingAll - noCellAll;
 
   return (
-    <FoldCard title="Who the works reach" subtitle="Schools with works against all schools, by wealth and settlement">
+    <FoldCard flat={flat} title="Who the works reach" subtitle="Schools with works against all schools, by wealth and settlement">
           <h3 className="mb-2 flex items-center gap-1.5 text-[12px] font-medium">
             Wealth quintile
             <Info title="Wealth quintile">
               <p>
                 The Relative Wealth Index is an estimate by Meta&apos;s Data for Good team, with researchers at UC
-                Berkeley, of how wealthy an area is compared with the rest of the same country. It is built from
-                satellite imagery and connectivity data, trained on household surveys, in cells of 2.4 km. It is
-                relative: it ranks places within Suriname and cannot be compared across countries. The file used
-                here was published on HDX in 2021.
+                Berkeley (Chi et al., PNAS 2022), of how wealthy an area is compared with the rest of the same
+                country. It is built from satellite imagery and connectivity data, trained on household surveys, in
+                cells of 2.4 km. It is relative: it ranks places within Suriname and cannot be compared across
+                countries. The file used here was published on HDX in 2021.
               </p>
               <p className="mt-2">
-                Each school takes the value of the nearest cell. That describes the area around the school, not
-                its students. Q1 is the poorest fifth of the country&apos;s schools with a value, Q5 the richest.
+                Each school takes the value of its 1 km population cell, which takes the index point nearest to
+                its centre. That describes the area around the school, not its students.
               </p>
               <p className="mt-2">
-                {rwi.missingAll} schools sit more than 5 km from an index cell and have no value
-                {rwi.missingIv ? `, ${rwi.missingIv} of them with works.` : "."}
+                The quintiles are cut over the {rwi.nAll} schools with a value. Schools that share a cell tie, so
+                the groups are not equal: {rwi.rows.map((r) => r.all).join(", ")} schools from Q1 to Q5.
+              </p>
+              <p className="mt-2">
+                {rwi.missingAll} schools have no value: {farAll} because the nearest index point is more than 5 km
+                away, {noCellAll} because they fall outside the populated cells of the grid
+                {rwi.missingIv ? `. ${rwi.missingIv} of them have projects.` : "."}
               </p>
             </Info>
           </h3>
@@ -40,8 +47,9 @@ export default function ContextCard({ data, filter }: { data: Dataset; filter: F
             nAll={rwi.nAll} nIv={rwi.nIv} />
           {rwi.nIv > 0 && (
             <p className="mt-2 text-[12px]" style={{ color: "var(--ink-2)" }}>
-              <strong className="num font-medium">{rwi.rows[0].iv + rwi.rows[1].iv}</strong> of {rwi.nIv} schools with works
-              and an index value are in Q1 or Q2, the two poorest quintiles, against 40% of all schools.
+              <strong className="num font-medium">{rwi.rows[0].iv + rwi.rows[1].iv}</strong> of {rwi.nIv} schools with projects
+              and an index value are in Q1 or Q2, the two poorest quintiles, against{" "}
+              <span className="num">{Math.round((100 * (rwi.rows[0].all + rwi.rows[1].all)) / rwi.nAll)}%</span> of all schools with a value.
             </p>
           )}
 
@@ -49,8 +57,9 @@ export default function ContextCard({ data, filter }: { data: Dataset; filter: F
             Settlement
             <Info title="Settlement">
               <p>
-                WorldPop 2023 population, added up in cells of 1 km. Neighbouring populated cells are grouped into
-                settlements, and each settlement is classed by its density and size:
+                WorldPop 2023 population at 100 m, added up in cells of 1 km. Neighbouring cells with at least 150
+                people per km² are grouped into settlements, and each settlement is classed by its population and
+                density:
               </p>
               <ul className="mt-2 space-y-1">
                 {AREAS.map((k) => (
@@ -58,9 +67,8 @@ export default function ContextCard({ data, filter }: { data: Dataset; filter: F
                 ))}
               </ul>
               <p className="mt-2">
-                Each school takes the class of the cell it sits in. Classification from the accessibility platform
-                (pipeline/06_pop_grid.py, definitions.md).
-                {area.missingAll ? ` ${area.missingAll} schools fall in a cell with no class and are left out.` : ""}
+                Each school takes the class of the cell it sits in. Method of the CIMA accessibility platform.
+                {area.missingAll ? ` ${area.missingAll} schools fall outside the populated cells of the grid and are left out.` : ""}
               </p>
             </Info>
           </h3>
@@ -77,8 +85,8 @@ function Compare({ rows, nAll, nIv }: { rows: { label: string; all: number; iv: 
   return (
     <div>
       <div className="mb-1.5 flex gap-3 text-[11px]" style={{ color: "var(--ink-2)" }}>
-        <span className="flex items-center gap-1"><span className="inline-block h-2 w-3 rounded-sm" style={{ background: "var(--muted)" }} />All schools ({nAll})</span>
-        <span className="flex items-center gap-1"><span className="inline-block h-2 w-3 rounded-sm" style={{ background: "var(--line)" }} />With works ({nIv})</span>
+        <span className="flex items-center gap-1"><span className="inline-block h-2 w-3 rounded-sm" style={{ background: "var(--muted)" }} />All schools with a value ({nAll})</span>
+        <span className="flex items-center gap-1"><span className="inline-block h-2 w-3 rounded-sm" style={{ background: "var(--line)" }} />With projects ({nIv})</span>
       </div>
       <ul className="space-y-1">
         {rows.map((r) => (
@@ -86,7 +94,7 @@ function Compare({ rows, nAll, nIv }: { rows: { label: string; all: number; iv: 
             <span style={{ color: "var(--ink-2)" }}>{r.label}</span>
             <div className="space-y-[2px]">
               <Bar w={pct(r.all, nAll) / max} color="var(--muted)" text={`${Math.round(pct(r.all, nAll))}%`} hint={`${r.all} of ${nAll} schools`} />
-              <Bar w={pct(r.iv, nIv) / max} color="var(--line)" text={`${Math.round(pct(r.iv, nIv))}%`} hint={`${r.iv} of ${nIv} schools with works`} />
+              <Bar w={pct(r.iv, nIv) / max} color="var(--line)" text={`${Math.round(pct(r.iv, nIv))}%`} hint={`${r.iv} of ${nIv} schools with projects`} />
             </div>
           </li>
         ))}
@@ -99,7 +107,7 @@ function Bar({ w, color, text, hint }: { w: number; color: string; text: string;
   return (
     <div className="flex items-center gap-1.5" title={hint}>
       <div className="h-2 rounded-r-[3px]" style={{ width: `${Math.max(w * 78, 0.5)}%`, background: color }} />
-      <span className="num text-[10px]" style={{ color: "var(--ink-2)" }}>{text}</span>
+      <span className="num text-[11px]" style={{ color: "var(--ink-2)" }}>{text}</span>
     </div>
   );
 }

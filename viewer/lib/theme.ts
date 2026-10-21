@@ -12,6 +12,10 @@ export const PALETTE = {
   muted: "#c9d3d1",
 };
 
+/** The accent: Play, links, the mortarboard of the title pin. Dark enough for
+ *  white text on it and for text on white (4.6:1). */
+export const ACCENT = "#1b7f9b";
+
 /** Program colours in the order the country config lists the programs: a deep
  *  blue, the cyan of the Arctic Spills pins (darkened to #21b6d8 so it holds a
  *  mark's lightness) and the turquoise of the CIMA logo (#60bfb9).

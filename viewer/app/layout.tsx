@@ -4,14 +4,15 @@ import type { Metadata } from "next";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 
-// Ranade for the title, Satoshi for the rest, both from the Indian Type
-// Foundry. Their free licence covers commercial use but not serving the font
-// files from our own server, so they load through Fontshare's CSS API.
-const FONTS = "https://api.fontshare.com/v2/css?f[]=ranade@500,700&f[]=satoshi@400,500,700&display=swap";
+// Ranade for the title, from the Indian Type Foundry. Its free licence covers
+// commercial use but not serving the font files from our own server, so it
+// loads through Fontshare's CSS API. The rest uses the system Helvetica or
+// Arial (globals.css), as Arctic Spills does: narrower than a geometric sans.
+const FONTS = "https://api.fontshare.com/v2/css?f[]=ranade@500,700&display=swap";
 
 export const metadata: Metadata = {
-  title: "School InvestmentMap",
-  description: "Schools with IDB-financed infrastructure works, by country.",
+  title: "School Investment Map",
+  description: "Schools with IDB-financed infrastructure projects in Suriname.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

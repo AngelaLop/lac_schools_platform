@@ -5,7 +5,7 @@
 import { useState } from "react";
 
 /** A block of a card. A collapsible one has its whole title row as the
- *  toggle, with a chevron in a circle so it reads as something to press. */
+ *  toggle, with a small chevron at the end. */
 export function Section({ title, note, children, collapsible = false, defaultOpen = true }: {
   title: string; note?: string; children: React.ReactNode; collapsible?: boolean; defaultOpen?: boolean;
 }) {
@@ -15,10 +15,10 @@ export function Section({ title, note, children, collapsible = false, defaultOpe
     <h2 className="text-[11px] font-medium uppercase tracking-wider" style={{ color: "var(--ink-2)" }}>{title}</h2>
   );
   return (
-    <section className="border-t px-4 py-3 [@media(max-height:820px)]:py-2.5" style={{ borderColor: "var(--rule)" }}>
+    <section className="fold-section border-t px-4 py-3 [@media(max-height:820px)]:py-2" style={{ borderColor: "var(--rule)" }}>
       {collapsible ? (
         <button onClick={() => setOpen(!open)} aria-expanded={open}
-          className="flex w-full items-center justify-between gap-2 text-left">
+          className="flex w-full items-center justify-between gap-2 text-left max-md:min-h-11">
           {heading}
           <Chevron open={open} />
         </button>
@@ -31,12 +31,14 @@ export function Section({ title, note, children, collapsible = false, defaultOpe
 
 /** A card of its own under the main panel, folded by default: a title, a line
  *  that says what is inside, and the chevron. */
-export function FoldCard({ title, subtitle, children, defaultOpen = false }: {
+export function FoldCard({ title, subtitle, children, defaultOpen = false, flat = false }: {
   title: string; subtitle: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean;
+  /** No card of its own: on the phone it sits in the sheet like the other blocks. */
+  flat?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="bg-white shadow-lg">
+    <div className={flat ? "bg-white" : "bg-white shadow-lg"}>
       <button onClick={() => setOpen(!open)} aria-expanded={open}
         className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left">
         <span>
@@ -51,12 +53,13 @@ export function FoldCard({ title, subtitle, children, defaultOpen = false }: {
   );
 }
 
-/** The toggle mark of every folding block: a chevron in a circle. */
+/** The toggle mark of every folding block: a bare chevron, pointing down when
+ *  folded and up when open. */
 export function Chevron({ open }: { open: boolean }) {
   return (
-    <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-transform"
-      style={{ borderColor: "var(--ink-3)", color: "var(--ink)", transform: open ? "rotate(180deg)" : undefined }}>
-      <svg width="8" height="8" viewBox="0 0 10 10"><path d="M1.5 3.5 5 7l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+    <span aria-hidden className="flex h-3 w-3 shrink-0 items-center justify-center transition-transform"
+      style={{ color: "var(--ink-3)", transform: open ? "rotate(180deg)" : undefined }}>
+      <svg width="10" height="10" viewBox="0 0 10 10"><path d="M1.5 3.5 5 7l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
     </span>
   );
 }
@@ -106,11 +109,14 @@ export function Flag({ iso3, height }: { iso3: string; height?: number }) {
   return null;
 }
 
-/** Author credit, as in the emergency viewer: GitHub mark and the portfolio link. */
+/** Author credit, as in the emergency viewer: GitHub mark and the portfolio
+ *  link. "Viewer by" says who built the tool, not who owns it; the grey is
+ *  lighter than the Sources button so it never competes with the logos. */
 export function Author({ light = false }: { light?: boolean }) {
-  const color = light ? "rgba(255,255,255,0.75)" : "var(--ink-2)";
+  const color = light ? "rgba(255,255,255,0.75)" : "var(--ink-3)";
   return (
-    <span className="inline-flex items-center gap-1.5 text-[11px]" style={{ color }}>
+    <span className="inline-flex items-center gap-1.5 text-[11px] font-normal" style={{ color }}>
+      Viewer by
       <a href="https://github.com/AngelaLop" target="_blank" rel="noreferrer" title="AngelaLop on GitHub"
         className="inline-flex" style={{ color: "inherit" }}>
         <GitHubMark size={12} />

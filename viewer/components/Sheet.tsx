@@ -7,7 +7,7 @@ import { useRef } from "react";
 export type Snap = "peek" | "half" | "full";
 
 const ORDER: Snap[] = ["peek", "half", "full"];
-export const PEEK_PX = 244;
+export const PEEK_PX = 272;
 const HEIGHT: Record<Snap, string> = {
   peek: `${PEEK_PX}px`,
   half: "55dvh",
@@ -36,7 +36,10 @@ export default function Sheet({ snap, onSnap, children }: {
       style={{ height: HEIGHT[snap], transition: "height 260ms ease" }}>
       <button
         aria-label={snap === "peek" ? "Show more" : "Show less"}
-        className="flex h-6 w-full shrink-0 touch-none items-center justify-center"
+        className="flex h-11 w-full shrink-0 touch-none items-center justify-center"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSnap(snap === "peek" ? "half" : "peek"); }
+        }}
         // Capture the pointer so the release still counts once the finger
         // has left the handle on its way up.
         onPointerDown={(e) => { start.current = e.clientY; e.currentTarget.setPointerCapture(e.pointerId); }}
