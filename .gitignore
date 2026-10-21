@@ -18,3 +18,9 @@ CLAUDE.md
 
 # Session handoff prompts: internal notes, kept on disk only.
 docs/prompt_*.md
+
+# Viewer data is built by scripts/03_viewer_data.py from the raw IDB file, so it
+# carries the same content and stays out of git with it.
+viewer/public/data/
+*.tsbuildinfo
+next-env.d.ts

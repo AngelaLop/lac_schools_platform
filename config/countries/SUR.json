@@ -44,6 +44,31 @@
       }
     }
   },
+  "context": {
+    "school_context": {
+      "path": "../accessibility_platform/data/schools/AR/SUR/processed/SUR_schools_with_context.csv",
+      "origin": "accessibility_platform, pipeline/06_pop_grid.py + 07_schools_context.py: WorldPop area class and Meta Relative Wealth Index (nearest cell, none past 5 km)",
+      "key": "id_centro"
+    },
+    "boundaries": {
+      "path": "../accessibility_platform/data/bounderys/LAC/level {level}/lac-level-{level}.shp",
+      "origin": "IDB administrative boundaries for LAC, EPSG:4326",
+      "adm0_pcode": "SUR"
+    },
+    "bathymetry": {
+      "path": "data/raw/global/natural_earth_bathymetry/unzipped",
+      "manifest": "data/raw/global/natural_earth_bathymetry/ne_10m_bathymetry_manifest.json",
+      "origin": "Natural Earth 10m bathymetry 4.1.0, nested polygons per depth from SRTM Plus, public domain",
+      "bbox": [-75.0, -10.0, -35.0, 20.0]
+    }
+  },
+  "viewer": {
+    "title": "School InvestmentMap",
+    "subtitle": "Schools with IDB-financed infrastructure works",
+    "bbox": [-58.1, 1.8, -53.9, 6.9],
+    "intro_bbox": [-61.5, 0.5, -49.5, 10.5],
+    "programs": ["SU-L1038", "L-1059", "L-1072"]
+  },
   "matching": {
     "school_types": {
       "OS": "O\\.?\\s*S\\.?",

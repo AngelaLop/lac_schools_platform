@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+/* The base map takes the palette of WWF's Arctic Spills viewer
+   (arcticspills.wwf.ca), read from its layer configuration: pale cyan sea,
+   muted grey-green land and near-black lines. The background barely has
+   contrast, so strong colour is left for the data alone.
+
+   The first two program colours are blues from the same viewer (its pins
+   are cyan); the third is the turquoise of the CIMA logo. lib/theme.ts says
+   how they were checked. */
+:root {
+  color-scheme: light;
+
+  /* Arctic's 1000-2000 m band; its shallowest band read as white on screen. */
+  --sea: #d1eef3;
+  --sea-deep: #a9dbe6;
+  --land: #dce6e1;
+  --land-country: #eef3f0;
+  --line: #1c282c;
+
+  --surface: #ffffff;
+  --panel: #f6f9f8;
+  --ink: #1c282c;
+  --ink-2: #4f5d61;
+  --ink-3: #829094;
+  --rule: #dde5e3;
+  --accent: #2aa7c9;
+
+  --school: #93a2a6;
+  --prog-1: #1d5aa6;
+  --prog-2: #21b6d8;
+  --prog-3: #60bfb9;
+  --muted: #c9d3d1;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--sea);
+  color: var(--ink);
+  font-family: "Satoshi", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.brand {
+  font-family: "Ranade", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.maplibregl-popup-content {
+  background: var(--line);
+  color: #fff;
+  border-radius: 2px;
+  padding: 6px 9px;
+  font-family: inherit;
+  font-size: 12px;
+  box-shadow: none;
+}
+
+.maplibregl-popup-tip {
+  border-top-color: var(--line) !important;
+  border-bottom-color: var(--line) !important;
+}
+
+.maplibregl-ctrl-attrib {
+  font-size: 10px;
+}
+
+/* The timeline ticks that have already played, as in Arctic Spills. */
+.tick-past {
+  background: var(--line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Phone: the title bar covers the top 64 px, so the map controls move below
+   it. Zoom is left to the fingers, so the zoom buttons and the scale go and
+   the home button stays. */
+@media (max-width: 767px) {
+  .maplibregl-ctrl-top-right {
+    top: 64px;
+  }
+  .maplibregl-ctrl-top-right .maplibregl-ctrl-group:has(.maplibregl-ctrl-zoom-in),
+  .maplibregl-ctrl-scale {
+    display: none;
+  }
+  /* Above the sheet's peek (PEEK_PX in components/Sheet.tsx). */
+  .maplibregl-ctrl-bottom-right {
+    bottom: 250px;
+  }
+}

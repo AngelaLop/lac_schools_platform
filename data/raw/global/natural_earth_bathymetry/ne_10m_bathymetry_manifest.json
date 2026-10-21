@@ -1,0 +1,12 @@
+{
+  "file": "ne_10m_bathymetry_all.zip",
+  "source": "Natural Earth, 10m physical, Bathymetry (all depths)",
+  "url": "https://naciscdn.org/naturalearth/10m/physical/ne_10m_bathymetry_all.zip",
+  "page": "https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-bathymetry/",
+  "downloaded": "2026-10-20",
+  "version": "4.1.0",
+  "bytes": 15577186,
+  "sha256": "9c5ea31402e5eb322a49f56136bfdc2732ab4e60c85720a4f83606f08088e5c2",
+  "license": "Public domain (naturalearthdata.com/about/terms-of-use)",
+  "content": "Twelve shapefiles of nested polygons, one per depth (0, 200, 1000 ... 10000 m), created by Natural Earth from SRTM Plus. Unzipped in unzipped/."
+}

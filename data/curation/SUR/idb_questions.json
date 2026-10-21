@@ -16,6 +16,11 @@
     "SUR-R038": "Asignada a O.S. Koewarasan (G2026): el listado tiene esa y O.S. II Koewarsan, así que la 1 es la que no es II. Por favor confirmar.",
     "SUR-R040": "Duda 5. Necesitamos la lista de las 113 escuelas, con código si lo tienen."
   },
+  "to_confirm": [
+    "SUR-R036",
+    "SUR-R037",
+    "SUR-R038"
+  ],
   "questions": [
     {
       "id": "SUR-R007",
