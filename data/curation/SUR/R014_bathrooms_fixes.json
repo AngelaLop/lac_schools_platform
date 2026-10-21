@@ -11,7 +11,7 @@
     "SUR-R014/10": {"name": "O.S. BROKOPONDO DEPENDANCE AFOBAKKA 01", "site": "none", "candidates": ["G9020", "G9001"], "note": "A dependency of O.S. Brokopondo; the ministry list has O.S. Afobaka (Stuwmeer), G9020, and O.S. Brokopondo, G9001, which is already row 15. The row does not say which site it is."},
     "SUR-R014/12": {"name": "O.S. COMPAGNIEKREEK (DEP. O.S BROKOPONDO)", "id": "G9018", "note": "O.S. Compagniekreek; village and ministry address Compagniekreek."},
     "SUR-R014/15": {"name": "OPENBARE SCHOOL BROKOPONDO - PREMISES 01", "id": "G9001", "note": "Openbare school is the long form of O.S.; O.S. Brokopondo, village Brokopondo."},
-    "SUR-R014/19": {"name": "S.O./V.S.O. FAJALOBI", "site": "none", "candidates": [], "note": "Special education school (S.O./V.S.O.) at Paranam; no school of that name in the ministry list."},
+    "SUR-R014/19": {"name": "S.O./V.S.O. FAJALOBI", "site": "coords", "id": "GFAJA", "lat": "05 36 45 N", "lon": "55 05 40 W", "note": "Special education school, in the raw ministry list (sheet 'School list', row 354, code GFAJA, Jarabakalaan, Para) but left out of the CIMA school base. Placed at the ministry coordinates."},
     "SUR-R014/27": {"name": "AUGUST THEODORUS PENGEL EBGS GLO", "id": "G8013", "note": "August Theodorus Pengel; the ministry list does not write the EBGS type. Ministry address Floris Pengelweg."},
     "SUR-R014/28": {"name": "ST. WILHELMUS SCHOOL", "id": "G8018", "note": "St. Wilhelmus Powakka; village and ministry address Powakka."},
     "SUR-R014/40": {"name": "ST. ANTONIUS", "id": "G4007", "note": "St. Antonius (Marowijne); village and ministry address Galibi."},

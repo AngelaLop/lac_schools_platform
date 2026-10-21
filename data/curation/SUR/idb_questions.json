@@ -4,7 +4,7 @@
   "notes": {
     "SUR-R005": "Lo dejamos fuera del mapa de escuelas.",
     "SUR-R007": "Respondida: Bacu es O.S. Bakoe, la misma escuela que Lebidoti en otro sitio (preescolar). Ubicada en el punto G9013A del anexo ICT.",
-    "SUR-R014": "Recibida la lista (Anexo IX, PDF): 110 escuelas en 4 distritos del interior, no 119. 105 quedan en el mapa; 5 sin ubicación. El PDF no trae monto por escuela (todas las celdas de costo dicen $0,00).",
+    "SUR-R014": "Recibida la lista (Anexo IX, PDF): 110 escuelas en 4 distritos del interior, no 119. 106 quedan en el mapa; 4 sin ubicación. El PDF no trae monto por escuela (todas las celdas de costo dicen $0,00).",
     "SUR-R021": "Asignada a O.S. Malobi, el sitio sin código del anexo ICT (03 39 16 N, 54 55 31 W), y no a O.S. Manlobi (G0008).",
     "SUR-R025": "Lo dejamos fuera del mapa de escuelas.",
     "SUR-R030": "Lo dejamos fuera del mapa de escuelas.",
@@ -28,12 +28,6 @@
         "G9020",
         "G9001"
       ]
-    },
-    {
-      "list": "SUR-R014",
-      "row": "NR 19",
-      "question": "«S.O./V.S.O. Fajalobi» (Paranam) no está en el listado del Ministerio. ¿Tienen su código o ubicación?",
-      "candidates": []
     },
     {
       "list": "SUR-R014",

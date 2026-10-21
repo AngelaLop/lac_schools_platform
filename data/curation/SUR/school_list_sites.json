@@ -22,5 +22,13 @@
   "lon": -54.92527777777778,
   "list_id": "SUR-R040",
   "row_key": "SUR-R040/Lot 5/6"
+ },
+ {
+  "id": "GFAJA",
+  "name": "S.O./V.S.O. FAJALOBI",
+  "lat": 5.6125,
+  "lon": -55.09444444444444,
+  "list_id": "SUR-R014",
+  "row_key": "SUR-R014/19"
  }
 ]

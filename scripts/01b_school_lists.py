@@ -16,7 +16,8 @@ Status of each row:
   code_fixed    the code of the list was wrong; the fix file gives the right one
   auto          matched by name, one candidate clearly ahead
   decided       matched by name, chosen by a person in the fix file
-  annex_site    not in the school base; placed at the coordinates of the list
+  annex_site    not in the school base; placed at the coordinates of the list,
+                or at those the fix file gives ('site': 'coords')
   no_site       no school and no usable coordinate; left off the map
 
 A row that needs a person and has no entry in the fix file stops the run.
@@ -190,6 +191,13 @@ def main() -> None:
                 if status == "auto" and not fix:
                     r["status"], r["id_final"] = "auto", best["id"]
                     note = note or reason
+                elif fix.get("site") == "coords":
+                    # A school outside the base whose coordinates the fix file
+                    # gives, with their source (for instance the raw ministry list).
+                    r["status"], r["id_final"] = "annex_site", fix["id"]
+                    r["lat_list"], r["lon_list"] = dms(fix["lat"]), dms(fix["lon"])
+                    extra_sites[fix["id"]] = {"id": fix["id"], "name": it["name_source"], "lat": r["lat_list"],
+                                              "lon": r["lon_list"], "list_id": list_id, "row_key": key}
                 elif "id" in fix:
                     r["status"], r["id_final"] = "decided", fix["id"]
                 elif fix.get("site") == "none":
