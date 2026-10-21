@@ -33,6 +33,44 @@
         "coordinate_quality": "coordinate_quality"
       }
     },
+    "school_lists": {
+      "SUR-R040": {
+        "kind": "lots_xlsx",
+        "label": "IDB list of the ICT works (annex and bidding lots, 2026)",
+        "origin": "Lists of the 113 schools of 'Small works in 113 schools' (SU-L1072), sent by the IDB on 2026-10-21",
+        "annex": {
+          "path": "data/raw/SUR/Annex Data base of Schools for small ICT works by lot.xlsx",
+          "manifest": "data/raw/SUR/ict_annex_schools_manifest.json"
+        },
+        "bidding": {
+          "path": "data/raw/SUR/Bidding lots small ICT works+09092026 bidding docs (113).xlsx",
+          "manifest": "data/raw/SUR/ict_bidding_lots_manifest.json"
+        },
+        "sheet_prefix": "lot",
+        "columns": {
+          "name": "Schoolname:",
+          "code": "Schoolcode: ",
+          "district": "District:",
+          "address": "Adress:",
+          "lat": "Latitude",
+          "lon": "Longtitude",
+          "budget": "Budget",
+          "type": "Type"
+        },
+        "fixes": "data/curation/SUR/R040_ict_fixes.json"
+      },
+      "SUR-R014": {
+        "kind": "transcribed",
+        "label": "IDB list of the bathroom works (Annex IX, 2020)",
+        "origin": "Annex IX of the bidding documents for the renovation of toilet groups (110 schools in 4 interior districts), sent by the IDB on 2026-10-21 as the list for 'Improvement of 119 School Bathrooms'. PDF only; tables transcribed by hand.",
+        "source": {
+          "path": "data/raw/SUR/ANNEX IX - Geographical Location small file.pdf",
+          "manifest": "data/raw/SUR/bathrooms_annex_ix_manifest.json"
+        },
+        "transcription": "data/curation/SUR/R014_bathrooms_transcribed.csv",
+        "fixes": "data/curation/SUR/R014_bathrooms_fixes.json"
+      }
+    },
     "school_details": {
       "path": "../accessibility_platform/data/schools/AR/SUR/raw/Suriname School List_03202024.xlsx",
       "origin": "Ministry of Education school list, March 2024; the source of the school base",
@@ -63,11 +101,21 @@
     }
   },
   "viewer": {
-    "title": "School InvestmentMap",
-    "subtitle": "Schools with IDB-financed infrastructure works",
+    "title": "School Investment Map",
+    "subtitle": "Schools with IDB-financed infrastructure projects",
     "bbox": [-58.1, 1.8, -53.9, 6.9],
     "intro_bbox": [-61.5, 0.5, -49.5, 10.5],
-    "programs": ["SU-L1038", "L-1059", "L-1072"]
+    "programs": ["SU-L1038", "SU-L1059", "SU-L1072"],
+    "list_layers": [
+      {"key": "SUR-R014", "label": "Bathroom works", "icon": "drop"},
+      {"key": "SUR-R040", "label": "ICT small works", "icon": "plug"}
+    ],
+    "program_official": {
+      "origin": "IDB project pages iadb.org/en/project/SU-L1038, SU-L1059, SU-L1072; the sheet writes L-1059, L- 1072 and CAIQUES",
+      "SU-L1038": {"code": "SU-L1038", "name": "BEIP 2"},
+      "L-1059": {"code": "SU-L1059", "name": "CAIQES"},
+      "L-1072": {"code": "SU-L1072", "name": "Skills for Growth"}
+    }
   },
   "matching": {
     "school_types": {

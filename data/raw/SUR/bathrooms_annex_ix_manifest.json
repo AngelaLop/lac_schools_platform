@@ -1,0 +1,8 @@
+{
+  "file": "ANNEX IX - Geographical Location small file.pdf",
+  "received": "2026-10-21",
+  "prepared": "IDB Suriname team, sent by email as the information on the bathroom works, available only as PDF. Annex IX of a bidding document; the map screenshots are dated Dec 18, 2020.",
+  "bytes": 1000526,
+  "sha256": "0a45fe2a8891bc2e5c9e4baa0c53e763fa343d1fbf3b6e0a285e69c54ef53f09",
+  "content": "30 pages. Page 2: 'Renovation of toilet groups, 110 schools in 4 districts of the interior'. Pages 4-8: tables as images (no text layer), one row per school, NR 1 to 110 in lots 1 to 18 (Brokopondo 1-4, Para 5-7, Marowijne 8-9, Sipaliwini 10-18): condition 1 to 4, school name, village, region, school type, works (RENOVATION and COVID 19, or COVID 19 alone); every cost cell reads $0,00. Pages 10-29: map screenshots per lot, without coordinates. Transcribed by hand to data/curation/SUR/R014_bathrooms_transcribed.csv."
+}

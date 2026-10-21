@@ -35,6 +35,7 @@ STATUS_LABEL = {
     "question": "Duda",
     "not_a_school": "No es escuela",
     "aggregate": "Varias escuelas",
+    "new_site": "Escuela nueva, sin ubicación",
 }
 
 
@@ -68,6 +69,8 @@ def row_status(r: pd.Series) -> str:
         return r["status"]
     if pd.notna(r["id_centro_final"]):
         return "assigned"
+    if r.get("decision_status") == "new_site":
+        return "new_site"
     return "question"
 
 

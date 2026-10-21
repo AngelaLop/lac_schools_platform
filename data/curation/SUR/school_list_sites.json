@@ -1,0 +1,26 @@
+[
+ {
+  "id": "G9013A",
+  "name": "Bakoe (Dep. O.S Lebidoti)",
+  "lat": 4.5936111111111115,
+  "lon": -54.92861111111111,
+  "list_id": "SUR-R040",
+  "row_key": "SUR-R040/lot 1/1"
+ },
+ {
+  "id": "R040-L1-11",
+  "name": "Nucleus Centrum Brokopondo",
+  "lat": 5.058333333333334,
+  "lon": -54.97638888888889,
+  "list_id": "SUR-R040",
+  "row_key": "SUR-R040/lot 1/11"
+ },
+ {
+  "id": "R040-L5-06",
+  "name": "O.S. MALOBI",
+  "lat": 3.6544444444444446,
+  "lon": -54.92527777777778,
+  "list_id": "SUR-R040",
+  "row_key": "SUR-R040/Lot 5/6"
+ }
+]

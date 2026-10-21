@@ -1,0 +1,43 @@
+{
+  "about": "Rows of the IDB school lists whose code cannot be taken as it is. Key: list id / sheet / position in the sheet (1 = first school). 'id' replaces the code; 'site': 'annex' places a school missing from the ministry list at the annex coordinates; 'site': 'none' leaves it off the map. 'note' is kept in the output.",
+  "decided_by": "AngelaLop",
+  "decided_on": "2026-10-21",
+  "fixes": {
+    "SUR-R040/lot 1/1": {
+      "name": "Bakoe (Dep. O.S Lebidoti)",
+      "site": "annex",
+      "note": "Code G9013A is not in the ministry list, where G9013 is O.S. Lebidoti at Sarakreek (04 39 39 N). The annex lists both, Bakoe with its own coordinates. Placed at the annex coordinates."
+    },
+    "SUR-R040/lot 1/11": {
+      "name": "Nucleus Centrum Brokopondo",
+      "site": "annex",
+      "note": "No code and not in the ministry list. Placed at the annex coordinates."
+    },
+    "SUR-R040/Lot 3/11": {
+      "name": "O.S Balona",
+      "id": "G1079",
+      "note": "The annex gives G1076, which is O.S. Tourtonne III, 6.4 km away. The annex coordinates (05 49 23 N, 55 12 08 W) and address (Esteliastraat 6-8) are those of O.S. Balonapark, G1079, in the ministry list (Estreliastr 6)."
+    },
+    "SUR-R040/Lot 3/12": {
+      "name": "Noorani (Primary)",
+      "id": "G1060",
+      "note": "The annex repeats M1017, the code of Imaam Abu Hanifa (row 6 of the same lot). Its coordinates and street (Kakantriestraat) match Maulana Shah Ahmad Noorani, G1060, a primary school in the ministry list."
+    },
+    "SUR-R040/Lot 4/15": {
+      "name": "Nucleus Centrum Marowijne",
+      "site": "none",
+      "note": "No code, not in the ministry list, and the annex latitude 05 30 61 N is not a valid coordinate (61 seconds). Off the map until the IDB gives a location."
+    },
+    "SUR-R040/Lot 5/6": {
+      "name": "O.S. MALOBI",
+      "site": "annex",
+      "note": "No code and not in the ministry list. The annex lists it apart from O.S. Manlobi (G0008), with other coordinates (03 39 16 N, 54 55 31 W). Placed at the annex coordinates."
+    }
+  },
+  "notes": {
+    "SUR-R040/lot 1/6": "Code M9004 is MULO Bronsweg in the ministry list, at the same coordinates; the annex address says 'vroeger op dit adres' (formerly at this address).",
+    "SUR-R040/Lot 3/8": "The ministry list itself carries 'LBO' as the code of LBO Duisburg; it is the key in the school base.",
+    "SUR-R040/Lot 3/13": "Code L1003 is LBO Theodoor Juda in the ministry list, at the same coordinates; the annex calls it a dependency of the R.D. Simons school.",
+    "SUR-R040/Lot 5/3": "The annex latitude 03 37 50 N is 170 km from the ministry coordinate for G0020 (05 09 47 N). The map keeps the ministry coordinate."
+  }
+}

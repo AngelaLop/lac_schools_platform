@@ -1,0 +1,8 @@
+{
+  "file": "Annex Data base of Schools for small ICT works by lot.xlsx",
+  "received": "2026-10-21",
+  "prepared": "IDB Suriname team, sent by email with the bidding lots file; annex of the bidding documents for the small ICT works of SU-L1072",
+  "bytes": 172657,
+  "sha256": "8d9df22f833cf98daa0e2200eed269bc499791cdf15c144eb573ec5f4bf99da2",
+  "content": "Sheet 'sumary' with schools per lot and district; sheets 'lot 1' and 'Lot 2' to 'Lot 5', one row per school (28 + 26 + 21 + 15 + 23 = 113): name, school code, type, district, address, ressort, latitude and longitude in degrees-minutes-seconds text, settlement area, students, teachers, electricity, internet, lot."
+}

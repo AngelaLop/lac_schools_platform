@@ -1,0 +1,8 @@
+{
+  "file": "Bidding lots small ICT works+09092026 bidding docs (113).xlsx",
+  "received": "2026-10-21",
+  "prepared": "IDB Suriname team; bidding documents dated 09-09-2026 in the file name",
+  "bytes": 150701,
+  "sha256": "ad74a526828d4989562e3fe0d37a86d7141463e39db63f08a9c82391ca824240",
+  "content": "Same 113 schools in the same order as the annex, without school codes in lots 1, 2, 4 and 5. Adds an estimated budget per school (column Budget) for lots 1 to 4; lot 5 has none and its total in 'sumary' is #REF!. Flags BEIP2_Schoolrehab, CAIQES_school_renov and IsDB _TVETpjct in lots 1, 3, 4 and 5. Sheet 'Hoja4' holds the selection workings."
+}

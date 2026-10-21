@@ -1,63 +1,105 @@
 {
   "sent_to": "IDB Suriname team",
-  "date": "2026-10-20",
+  "date": "2026-10-21",
   "notes": {
     "SUR-R005": "Lo dejamos fuera del mapa de escuelas.",
-    "SUR-R007": "Duda 1. No hay ninguna escuela «Bacu» en el listado. La más parecida es O.S. Lebidoti dep. Bakoe (G9013), ya asignada a «OS Lebidotee».",
-    "SUR-R014": "Duda 4. Necesitamos la lista de las 119 escuelas, con código si lo tienen.",
+    "SUR-R007": "Respondida: Bacu es O.S. Bakoe, la misma escuela que Lebidoti en otro sitio (preescolar). Ubicada en el punto G9013A del anexo ICT.",
+    "SUR-R014": "Recibida la lista (Anexo IX, PDF): 110 escuelas en 4 distritos del interior, no 119. 105 quedan en el mapa; 5 sin ubicación. El PDF no trae monto por escuela (todas las celdas de costo dicen $0,00).",
+    "SUR-R021": "Asignada a O.S. Manlobi (G0008) por el nombre. El anexo ICT trae «O.S. Manlobi» (G0008) y «O.S. Malobi» (sin código, otras coordenadas) como dos escuelas. Por favor confirmar a cuál corresponde «Malobi».",
     "SUR-R025": "Lo dejamos fuera del mapa de escuelas.",
     "SUR-R030": "Lo dejamos fuera del mapa de escuelas.",
     "SUR-R031": "Lo dejamos fuera del mapa de escuelas.",
     "SUR-R032": "Lo dejamos fuera del mapa de escuelas.",
-    "SUR-R033": "Duda 2. Hay dos escuelas Hanna's Lust. ¿A cuál se le hizo el cerco?",
-    "SUR-R034": "Duda 3. Hay tres escuelas en Houttuin. ¿A cuál se le hizo el cerco?",
-    "SUR-R036": "Asignada por el número: 1 = O.S. I Houttuin. Por favor confirmar.",
-    "SUR-R037": "Asignada por el número: 2 = O.S. II Houttuin. Por favor confirmar.",
-    "SUR-R038": "Asignada a O.S. Koewarasan (G2026): el listado tiene esa y O.S. II Koewarsan, así que la 1 es la que no es II. Por favor confirmar.",
-    "SUR-R040": "Duda 5. Necesitamos la lista de las 113 escuelas, con código si lo tienen."
+    "SUR-R033": "Respondida: es una escuela nueva en el resort Hanna's Lust, sin nombre oficial. Fuera del mapa hasta recibir la georreferenciación de los pliegos.",
+    "SUR-R034": "Respondida: es una escuela nueva en el resort Houttuin, sin nombre oficial. Fuera del mapa hasta recibir la georreferenciación de los pliegos.",
+    "SUR-R036": "Confirmada por el anexo ICT: «OS 1 Houttuin», código G2010.",
+    "SUR-R037": "Confirmada por el anexo ICT: «OS 2 Houttuin», código G2011.",
+    "SUR-R038": "Confirmada por el anexo ICT: «O.S Koewarasan 1», código G2026.",
+    "SUR-R040": "Recibida la lista (anexo y lotes de licitación ICT): 113 escuelas. 112 quedan en el mapa. El presupuesto por escuela cubre los lotes 1 a 4 (USD 3.762.500); el lote 5 no tiene presupuesto (#REF! en el archivo)."
   },
   "to_confirm": [
-    "SUR-R036",
-    "SUR-R037",
-    "SUR-R038"
+    "SUR-R021"
   ],
   "questions": [
     {
-      "id": "SUR-R007",
-      "question": "¿«Bacu» es la sede Bakoe de esta escuela o es otra escuela? Si es otra, ¿tienen su código o ubicación?",
+      "id": "SUR-R021",
+      "question": "¿«Malobi» es O.S. Manlobi (G0008) o la O.S. Malobi sin código que aparece en el anexo ICT?",
       "candidates": [
-        "G9013"
+        "G0008"
       ],
       "extra_options": [
-        "Otra escuela que no está en el listado"
+        "O.S. Malobi del anexo ICT (sin código, 03 39 16 N, 54 55 31 W)"
       ]
-    },
-    {
-      "id": "SUR-R033",
-      "question": "¿A cuál de las dos escuelas se le hizo el cerco?",
-      "candidates": [
-        "G2056",
-        "L2010"
-      ]
-    },
-    {
-      "id": "SUR-R034",
-      "question": "¿A cuál de las tres escuelas se le hizo el cerco?",
-      "candidates": [
-        "G2010",
-        "G2011",
-        "M2018"
-      ]
-    },
-    {
-      "id": "SUR-R014",
-      "question": "Necesitamos la lista de las 119 escuelas, con código si lo tienen.",
-      "candidates": []
-    },
-    {
-      "id": "SUR-R040",
-      "question": "Necesitamos la lista de las 113 escuelas, con código si lo tienen.",
-      "candidates": []
     }
+  ],
+  "list_questions": [
+    {
+      "list": "SUR-R014",
+      "row": "NR 10",
+      "question": "«O.S. Brokopondo dependance Afobakka 01»: ¿es O.S. Afobaka (Stuwmeer), G9020, u otra sede?",
+      "candidates": [
+        "G9020",
+        "G9001"
+      ]
+    },
+    {
+      "list": "SUR-R014",
+      "row": "NR 19",
+      "question": "«S.O./V.S.O. Fajalobi» (Paranam) no está en el listado del Ministerio. ¿Tienen su código o ubicación?",
+      "candidates": []
+    },
+    {
+      "list": "SUR-R014",
+      "row": "NR 86",
+      "question": "«Pater Voorbraak 2 (dep. Pamboko)» en Gengi Ston: el listado solo tiene la sede de Pamboko (G0041, fila 87). ¿Tienen código o ubicación de la de Gengi Ston?",
+      "candidates": [
+        "G0041"
+      ]
+    },
+    {
+      "list": "SUR-R014",
+      "row": "NR 96",
+      "question": "«O.S. Godo dependance» en Godo: el listado solo tiene O.S. Godo (G0047, fila 95). ¿Dónde está esta dependencia?",
+      "candidates": [
+        "G0047"
+      ]
+    },
+    {
+      "list": "SUR-R014",
+      "row": "NR 104",
+      "question": "«O.S. Boslanti» en Pusugrunu (Boven Saramacca): la única O.S. Boslanti del listado (G9019) está en Brokopondo. ¿Es otra escuela?",
+      "candidates": [
+        "G9019"
+      ]
+    },
+    {
+      "list": "SUR-R014",
+      "row": "título",
+      "question": "El Excel de intervenciones dice 119 baños y el Anexo IX lista 110 escuelas. ¿Faltan escuelas o hay escuelas con más de un baño?",
+      "candidates": []
+    },
+    {
+      "list": "SUR-R040",
+      "row": "Lote 4, fila 15",
+      "question": "«Nucleus Centrum Marowijne» no tiene código y su latitud (05 30 61 N) no es válida. ¿Tienen la coordenada correcta?",
+      "candidates": []
+    },
+    {
+      "list": "SUR-R040",
+      "row": "Lote 5",
+      "question": "El lote 5 (23 escuelas de Sipaliwini) no tiene presupuesto por escuela (#REF!). ¿Tienen esos montos?",
+      "candidates": []
+    },
+    {
+      "list": "SUR-R040",
+      "row": "Lote 5, fila 3",
+      "question": "O.S. Witagron (G0020): la latitud del anexo (03 37 50 N) queda a 170 km de la del Ministerio (05 09 47 N). Usamos la del Ministerio; ¿es correcto?",
+      "candidates": [
+        "G0020"
+      ]
+    }
+  ],
+  "awaiting": [
+    "Georreferenciación de los dos sitios de cercos (Hanna's Lust y Houttuin), en los pliegos"
   ]
 }
