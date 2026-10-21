@@ -33,11 +33,16 @@ export default function Info({ title, children }: { title: string; children: Rea
       <button ref={button} onClick={(e) => {
           e.stopPropagation();
           const r = box.current!.getBoundingClientRect();
+          // Inside a box drawn at the interface scale (.ui-scale) the popup's
+          // own offsets are scaled too, so they are given in that box's units.
+          const z = box.current!.closest(".ui-scale")
+            ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--ui")) || 1 : 1;
           // Kept inside the window when the icon sits near its right edge.
-          const left = Math.min(Math.max(12, r.left - 16), window.innerWidth - 372);
+          const left = Math.min(Math.max(12, r.left - 16), window.innerWidth - 372 * z);
           // Under the icon when there is room, above it when it sits low on the screen.
-          const below = window.innerHeight - r.bottom > 360;
-          setAt(below ? { left, top: r.bottom + 8 } : { left, bottom: window.innerHeight - r.top + 8 });
+          const below = window.innerHeight - r.bottom > 360 * z;
+          setAt(below ? { left: left / z, top: (r.bottom + 8) / z }
+            : { left: left / z, bottom: (window.innerHeight - r.top + 8) / z });
           setOpen(!open);
         }} aria-expanded={open} aria-haspopup="dialog" title={title} aria-label={title}
         className="relative flex h-5 w-5 items-center justify-center rounded-full border text-[11px] font-semibold italic hover:bg-[var(--panel)] max-md:after:absolute max-md:after:-inset-3 max-md:after:content-['']"

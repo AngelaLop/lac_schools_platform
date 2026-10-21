@@ -18,7 +18,7 @@ export default function Credits() {
     // Desktop: one line, Sources | credit on the left and the logos on the
     // right. Phone: Sources and the logos on the first row, the credit alone
     // under them, last, like the signature of a note.
-    <footer className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t bg-white px-4 py-2 max-md:py-2.5"
+    <footer className="ui-scale flex flex-wrap items-center gap-x-4 gap-y-2 border-t bg-white px-4 py-2 max-md:py-2.5"
       style={{ borderColor: "var(--rule)" }}>
       <span className="flex items-center gap-1.5 text-[12px] font-medium" style={{ color: "var(--ink-2)" }}>
         Sources

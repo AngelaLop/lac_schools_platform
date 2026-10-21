@@ -158,10 +158,11 @@ export default function Page() {
     <div className="flex h-dvh flex-col">
       <div className="relative flex-1">
         {/* The panel comes first in the page, so the keyboard reaches it before the map. */}
-        {/* Left column: one scroll for all its cards. On large screens the
-            interface is drawn larger (--ui in globals.css). */}
-        <aside className="absolute bottom-3 left-3 top-3 z-20 w-[calc(380px*var(--ui))] overflow-y-auto overscroll-contain">
-          <div className="ui-scale flex w-[380px] flex-col gap-2 pb-1">
+        {/* Left column: one scroll for all its cards. The cards take the width
+            left by the scrollbar, so a classic Windows scrollbar does not push
+            them sideways into a second, horizontal one. */}
+        <aside className="absolute bottom-3 left-3 top-3 z-20 w-[calc(380px*var(--ui))] overflow-y-auto overflow-x-hidden overscroll-contain [scrollbar-gutter:stable] [scrollbar-width:thin]">
+          <div className="ui-scale flex w-full flex-col gap-2 pb-1">
             <div className="overflow-hidden bg-white shadow-lg">
               {/* As in Arctic Spills: the mark spans the title and the lines under it. */}
               <header className="flex items-center gap-3 px-4 py-2.5 [@media(max-height:820px)]:py-2" style={{ background: "var(--line)", color: "#fff" }}>
@@ -198,7 +199,7 @@ export default function Page() {
 
         {/* The notice for a filter whose projects are not on the map. */}
         <div className="absolute bottom-3 left-[calc(380px*var(--ui)+24px)] right-14 z-10 flex flex-col gap-2">
-          <OffMapNotice data={data} filter={filter} layers={layers} />
+          <div className="ui-scale"><OffMapNotice data={data} filter={filter} layers={layers} /></div>
         </div>
       </div>
       <Credits />
@@ -232,7 +233,9 @@ function Legend({ data, filter, layers, lists, onToggle }: {
   const iconed = new Set(Object.values(lists).flatMap((s) => [...s]));
   const others = data.schools.filter((s) => s.in_base && !s.own && !iconed.has(s.id)).length;
   return (
-    <div className="absolute left-[calc(380px*var(--ui)+24px)] top-3 z-10 bg-white/90 px-3 py-2 text-[11px] shadow-sm max-md:left-2 max-md:top-[64px] max-md:px-2 max-md:py-1.5"
+    // The box sits at its place on the screen; its content is drawn at the interface scale.
+    <div className="absolute left-[calc(380px*var(--ui)+24px)] top-3 z-10 max-md:left-2 max-md:top-[64px]">
+    <div className="ui-scale bg-white/90 px-3 py-2 text-[11px] shadow-sm max-md:px-2 max-md:py-1.5"
       style={{ color: "var(--ink-2)" }}>
       {data.programs.map((p) => {
         // The school lists of the program sit under it, indented.
@@ -270,6 +273,7 @@ function Legend({ data, filter, layers, lists, onToggle }: {
         <Swatch color={PALETTE.school} size={6} />Other schools
         <span className="num" style={{ color: "var(--ink-3)" }}>({others})</span>
       </div>
+    </div>
     </div>
   );
 }
