@@ -93,6 +93,21 @@
       "origin": "IDB administrative boundaries for LAC, EPSG:4326",
       "adm0_pcode": "SUR"
     },
+    "claimed_areas": {
+      "path": "data/raw/global/natural_earth_disputed/unzipped/ne_10m_admin_0_disputed_areas.shp",
+      "manifest": "data/raw/global/natural_earth_disputed/ne_10m_admin_0_disputed_areas_manifest.json",
+      "origin": "Natural Earth 10m Admin 0 disputed areas 5.1.1, public domain",
+      "note": "The IDB team asked in October 2026 for the map to include the areas Suriname claims. They are drawn as part of Sipaliwini and marked as disputed",
+      "brk_a3": ["B15", "B14"],
+      "adm1": "SR09"
+    },
+    "country_borders": {
+      "path": "data/raw/global/natural_earth_boundary_lines/unzipped/ne_10m_admin_0_boundary_lines_land.shp",
+      "manifest": "data/raw/global/natural_earth_boundary_lines/ne_10m_admin_0_boundary_lines_land_manifest.json",
+      "origin": "Natural Earth 10m Admin 0 land boundary lines 5.1.0, public domain",
+      "note": "The basemap's own borders follow the line each neighbour administers, so the viewer draws them itself: Suriname's from its districts, the others from Natural Earth",
+      "bbox": [-75.0, -10.0, -35.0, 20.0]
+    },
     "bathymetry": {
       "path": "data/raw/global/natural_earth_bathymetry/unzipped",
       "manifest": "data/raw/global/natural_earth_bathymetry/ne_10m_bathymetry_manifest.json",
@@ -103,7 +118,7 @@
   "viewer": {
     "title": "School Investment Map",
     "subtitle": "Schools with IDB-financed infrastructure projects",
-    "bbox": [-58.1, 1.8, -53.9, 6.9],
+    "bbox": [-58.5, 1.4, -53.9, 6.9],
     "intro_bbox": [-61.5, 0.5, -49.5, 10.5],
     "programs": ["SU-L1038", "SU-L1059", "SU-L1072"],
     "list_layers": [

@@ -1,0 +1,12 @@
+{
+  "file": "ne_10m_admin_0_disputed_areas.zip",
+  "source": "Natural Earth, 10m cultural, Admin 0 - Breakaway, Disputed Areas",
+  "url": "https://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_0_disputed_areas.zip",
+  "page": "https://www.naturalearthdata.com/downloads/10m-cultural-vectors/",
+  "downloaded": "2026-10-26",
+  "version": "5.1.1",
+  "bytes": 215221,
+  "sha256": "a250c1cf8ab68898399928a1fa1d5c242eb4de6335cb51a7f7a7f12a9f3c8438",
+  "license": "Public domain (naturalearthdata.com/about/terms-of-use)",
+  "content": "Disputed and breakaway areas of the world. Suriname claims two: B15 Courantyne Headwaters (administered by Guyana) and B14 Lawa Headwaters (administered by France). Unzipped in unzipped/."
+}

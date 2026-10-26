@@ -92,6 +92,10 @@ export interface Dataset {
   schoolsGeo: GeoJSON.FeatureCollection;
   adm1Geo: GeoJSON.FeatureCollection;
   bathyGeo: GeoJSON.FeatureCollection | null;
+  /** The areas the country claims, marked as disputed (step 03, claimed_areas). */
+  disputedGeo: GeoJSON.FeatureCollection | null;
+  /** Land borders drawn instead of CARTO's, which follow the administered lines. */
+  bordersGeo: GeoJSON.FeatureCollection | null;
   /** In the panel's view only: the rows of the school lists whose layer is off. */
   hidden?: Intervention[];
 }
@@ -102,10 +106,12 @@ export async function loadDataset(iso: string): Promise<Dataset> {
     if (!r.ok) throw new Error(`${f}: ${r.status}`);
     return r.json();
   });
-  const [country, iv, schoolsGeo, adm1Geo, bathyGeo] = await Promise.all([
+  const [country, iv, schoolsGeo, adm1Geo, bathyGeo, disputedGeo, bordersGeo] = await Promise.all([
     get("country.json"), get("interventions.json"), get("schools.geojson"), get("adm1.geojson"),
     // Optional: a country without sea bands still opens.
     get("bathymetry.geojson").catch(() => null),
+    get("disputed.geojson").catch(() => null),
+    get("borders.geojson").catch(() => null),
   ]);
   // A pin takes the colour of the school's own projects, never of a list: a
   // school with only the bathroom list has no pin.
@@ -127,7 +133,7 @@ export async function loadDataset(iso: string): Promise<Dataset> {
   });
   const adm1Of = new Map(schools.map((s) => [s.id, s.adm1]));
   const interventions: Intervention[] = iv.rows.map((r: Intervention) => ({ ...r, adm1: r.school ? adm1Of.get(r.school) ?? null : null }));
-  return { country, currency: iv.currency, programs: iv.programs, interventions, schools, schoolsGeo, adm1Geo, bathyGeo };
+  return { country, currency: iv.currency, programs: iv.programs, interventions, schools, schoolsGeo, adm1Geo, bathyGeo, disputedGeo, bordersGeo };
 }
 
 // ---------------------------------------------------------------- aggregates --

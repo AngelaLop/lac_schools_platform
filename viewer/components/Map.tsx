@@ -22,7 +22,7 @@ const CLUSTER_PX = 36;
 // A pin grows with the zoom; the selected one is drawn larger still.
 const PIN_SIZE: maplibregl.ExpressionSpecification = ["interpolate", ["linear"], ["zoom"], 6, 0.75, 10, 0.95, 14, 1.2];
 // The round icons of the school lists stay small at country scale, where they crowd.
-const ICON_SIZE: maplibregl.ExpressionSpecification = ["interpolate", ["linear"], ["zoom"], 6, 0.45, 10, 0.65, 14, 0.9];
+const ICON_SIZE: maplibregl.ExpressionSpecification = ["interpolate", ["linear"], ["zoom"], 6, 0.52, 10, 0.74, 14, 1];
 const PIN_SIZE_SELECTED: maplibregl.ExpressionSpecification = ["interpolate", ["linear"], ["zoom"], 6, 1.05, 10, 1.3, 14, 1.6];
 
 interface Props {
@@ -59,8 +59,27 @@ function pad(m: maplibregl.Map, kind: "country" | "district" | "school" | "frame
   return { top: 40, bottom: 40, left, right: 60 };
 }
 
-/** Recolour the CARTO layers by their role; hide what competes with the data. */
-function recolour(m: maplibregl.Map) {
+/** Thin diagonal strokes for the disputed areas, drawn at twice the size for sharp edges. */
+function hatchImage(): ImageData {
+  const n = 16;
+  const c = document.createElement("canvas");
+  c.width = c.height = n;
+  const g = c.getContext("2d")!;
+  g.strokeStyle = PALETTE.ink3;
+  g.lineWidth = 1.5;
+  // The stroke continues across the corners so the tiles join without gaps.
+  for (const o of [-n, 0, n]) {
+    g.beginPath();
+    g.moveTo(o, n);
+    g.lineTo(o + n, 0);
+    g.stroke();
+  }
+  return g.getImageData(0, 0, n, n);
+}
+
+/** Recolour the CARTO layers by their role; hide what competes with the data.
+ *  With `ownBorders`, CARTO's country borders go too: the viewer draws its own. */
+function recolour(m: maplibregl.Map, ownBorders: boolean) {
   for (const layer of m.getStyle().layers ?? []) {
     const id = layer.id;
     if (layer.type === "background") m.setPaintProperty(id, "background-color", PALETTE.land);
@@ -70,7 +89,7 @@ function recolour(m: maplibregl.Map) {
     } else if (layer.type === "line" && /^waterway/.test(id)) m.setPaintProperty(id, "line-color", PALETTE.seaDeep);
     else if (layer.type === "fill" && /landcover|landuse|park|building|aeroway/.test(id)) {
       m.setLayoutProperty(id, "visibility", "none");
-    } else if (layer.type === "line" && /boundary_country_outline/.test(id)) {
+    } else if (layer.type === "line" && (/boundary_country_outline/.test(id) || (ownBorders && /boundary_country/.test(id)))) {
       m.setLayoutProperty(id, "visibility", "none");
     } else if (layer.type === "line" && /boundary_country/.test(id)) {
       m.setPaintProperty(id, "line-color", PALETTE.line);
@@ -211,7 +230,7 @@ export default function Map({ data, active, lists, selected, district, onSelect,
     map.current = m;
 
     m.on("load", async () => {
-      recolour(m);
+      recolour(m, data.bordersGeo != null);
       // The attribution starts folded into its (i) button instead of spread over the map.
       m.getContainer().querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show");
       await Promise.all(PROGRAM_HEX.map(async (hex, i) => m.addImage(`pin-${i}`, await pinImage(hex), { pixelRatio: 2 })));
@@ -263,6 +282,32 @@ export default function Map({ data, active, lists, selected, district, onSelect,
         id: "adm1-line", type: "line", source: "adm1",
         paint: { "line-color": PALETTE.line, "line-width": 0.6, "line-opacity": 0.35, "line-dasharray": [3, 2] },
       }, firstSymbol);
+      // The areas Suriname claims are part of Sipaliwini: hatched, with a
+      // dashed line where the administered part ends, like a district line.
+      if (data.disputedGeo) {
+        m.addSource("disputed", { type: "geojson", data: data.disputedGeo });
+        m.addImage("hatch", hatchImage(), { pixelRatio: 2 });
+        const kind = (k: string): maplibregl.FilterSpecification => ["==", ["get", "kind"], k];
+        m.addLayer({ id: "disputed-hatch", type: "fill", source: "disputed", filter: kind("area"),
+          paint: { "fill-pattern": "hatch", "fill-opacity": 0.5 } }, firstSymbol);
+        m.addLayer({ id: "disputed-defacto", type: "line", source: "disputed", filter: kind("defacto"),
+          paint: { "line-color": PALETTE.line, "line-width": 0.6, "line-opacity": 0.35, "line-dasharray": [3, 2] } }, firstSymbol);
+        m.addLayer({ id: "disputed-label", type: "symbol", source: "disputed", filter: kind("label"), minzoom: 5,
+          layout: {
+            "text-field": ["concat", ["get", "name"], "\n", "Disputed area"],
+            "text-font": ["Montserrat Regular Italic", "Open Sans Italic", "Noto Sans Regular"],
+            "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 9, 13],
+            "text-max-width": 9,
+          },
+          paint: { "text-color": "#4f5d61", "text-halo-color": "rgba(255,255,255,0.9)", "text-halo-width": 1.2 } }, firstSymbol);
+      }
+      // Country borders, where CARTO's were: over the roads, under the place names.
+      if (data.bordersGeo) {
+        const firstLabel = m.getStyle().layers?.find((l) => l.type === "symbol" && /^(watername|place)/.test(l.id))?.id;
+        m.addSource("borders", { type: "geojson", data: data.bordersGeo });
+        m.addLayer({ id: "borders", type: "line", source: "borders",
+          paint: { "line-color": PALETTE.line, "line-width": 1, "line-opacity": 0.6 } }, firstLabel);
+      }
       // The other schools go under the place names, so the names stay legible.
       m.addLayer({
         id: "schools-base", type: "circle", source: "schools",

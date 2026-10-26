@@ -11,6 +11,8 @@ const SOURCES = [
   { what: "Wealth index", who: "Meta Relative Wealth Index, HDX, 2021" },
   { what: "Settlement class", who: "WorldPop 2023, 1 km grid" },
   { what: "Districts", who: "IDB administrative boundaries" },
+  { what: "Areas Suriname claims, marked as disputed", who: "Natural Earth 5.1.1, Admin 0 disputed areas" },
+  { what: "Borders between the neighbouring countries", who: "Natural Earth 5.1.0, Admin 0 land boundaries" },
 ];
 
 export default function Credits() {

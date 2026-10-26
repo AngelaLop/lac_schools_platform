@@ -1,0 +1,12 @@
+{
+  "file": "ne_10m_admin_0_boundary_lines_land.zip",
+  "source": "Natural Earth, 10m cultural, Admin 0 - Boundary Lines (land boundaries)",
+  "url": "https://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_0_boundary_lines_land.zip",
+  "page": "https://www.naturalearthdata.com/downloads/10m-cultural-vectors/",
+  "downloaded": "2026-10-26",
+  "version": "5.1.0",
+  "bytes": 1036202,
+  "sha256": "16ead035f539c8b6c23650c5845d86ad3556553e7456bdf9b4730210f26aacbe",
+  "license": "Public domain (naturalearthdata.com/about/terms-of-use)",
+  "content": "Land borders between countries, one line per pair (ADM0_A3_L, ADM0_A3_R). The viewer draws the borders between Suriname's neighbours from it. Unzipped in unzipped/."
+}

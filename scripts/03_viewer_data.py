@@ -2,7 +2,8 @@
 
 Reads the crosswalk from step 01, the school lists from step 01b, the school
 base with its context (area class and Meta Relative Wealth Index, from
-accessibility_platform) and the IDB boundaries, and writes
+accessibility_platform), the IDB boundaries and the areas the country claims
+(Natural Earth), and writes
 viewer/public/data/{ISO}/:
 
   schools.geojson        every school of the base, with its context and, when
@@ -13,7 +14,11 @@ viewer/public/data/{ISO}/:
                          list becomes one row per listed school, and the part
                          of its amount the list does not split by school stays
                          on the row itself, off the map
-  adm1.geojson           district outlines, simplified
+  adm1.geojson           district outlines, simplified, with the areas the
+                         country claims joined to their district
+  disputed.geojson       the claimed areas, marked as disputed (Natural Earth)
+  borders.geojson        land borders: the country's own, claims included,
+                         and its neighbours' (Natural Earth)
   bathymetry.geojson     sea depth bands around the country (Natural Earth)
   country.json           title, extent and program order for the viewer
   manifest.json          inputs with their sha256, and the counts written
@@ -30,7 +35,8 @@ from pathlib import Path
 
 import geopandas as gpd
 import pandas as pd
-from shapely.geometry import box
+from shapely.geometry import Polygon, box
+from shapely.ops import polylabel, unary_union
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -38,6 +44,17 @@ ROOT = Path(__file__).resolve().parents[1]
 SIMPLIFY_DEG = 0.001
 # The sea is background: about 1 km is enough.
 SIMPLIFY_SEA_DEG = 0.01
+# About 1 km2: a piece of a claim smaller than this is a sliver between sources.
+CLAIM_MIN_DEG2 = 1e-4
+# About 3 km: the edge of the country this close to the sea is coast, not border.
+# Natural Earth's sea is coarse; at 1 km, bits of coast still came out as border.
+COAST_DEG = 0.03
+# About 100 km2: smaller pieces of the country are coastal islands.
+ISLAND_DEG2 = 0.01
+# About 5 km: inlets of the sea narrower than twice this are estuaries.
+ESTUARY_DEG = 0.05
+# About 55 km: a piece of the edge shorter than this is coast left over.
+BORDER_MIN_DEG = 0.5
 
 # Where a row that is not on the map goes, and why.
 PLACEMENT = {
@@ -150,6 +167,78 @@ def expand_lists(interventions: pd.DataFrame, lists: pd.DataFrame, config: dict)
     return df
 
 
+def claimed_areas(adm1: gpd.GeoDataFrame, spec: dict) -> tuple[gpd.GeoDataFrame, gpd.GeoDataFrame]:
+    """Join the areas the country claims to the district that holds them.
+
+    The IDB boundaries stop at the line each neighbour administers. The claimed
+    areas come from Natural Earth and are added to the district's polygon; the
+    slivers where the two sources do not meet are filled. Returns the districts
+    and what the viewer draws over the claimed areas:
+
+      area     what the claims add to the district, hatched
+      label    a point well inside each area, for its name and "Disputed area"
+      defacto  the IDB edge the claims now lie beyond, dashed like a district line
+    """
+    ne = gpd.read_file(ROOT / spec["path"])
+    ne = ne[ne["BRK_A3"].isin(spec["brk_a3"])].to_crs(adm1.crs)
+    if len(ne) != len(spec["brk_a3"]):
+        raise SystemExit(f"Claimed areas not found in {spec['path']}: {spec['brk_a3']}")
+    before = unary_union(adm1.geometry)
+    i = adm1.index[adm1["adm1"] == spec["adm1"]][0]
+    district = adm1.at[i, "geometry"]
+    joined = unary_union([district, *ne.geometry])
+    # The district has no holes of its own, so every hole is a sliver between sources.
+    adm1.at[i, "geometry"] = Polygon(joined.exterior)
+    after = unary_union(adm1.geometry)
+    pieces = []
+    for part in getattr(adm1.at[i, "geometry"].difference(district), "geoms", []):
+        # Slivers along the other borders, where the two sources differ by a few
+        # hundred metres, stay unmarked.
+        if part.area < CLAIM_MIN_DEG2:
+            continue
+        name = max(ne.itertuples(), key=lambda r: r.geometry.intersection(part).area).BRK_NAME
+        pieces.append({"kind": "area", "name": name, "geometry": part})
+    for name in ne["BRK_NAME"]:
+        largest = max((p["geometry"] for p in pieces if p["name"] == name), key=lambda g: g.area)
+        pieces.append({"kind": "label", "name": name, "geometry": polylabel(largest, 0.01)})
+    areas = unary_union([p["geometry"] for p in pieces if p["kind"] == "area"])
+    edge = before.boundary.intersection(after.buffer(-1e-5)).intersection(areas.buffer(1e-5))
+    pieces.append({"kind": "defacto", "geometry": edge})
+    out = gpd.GeoDataFrame(pieces, crs=adm1.crs)
+    out["geometry"] = out.geometry.simplify(SIMPLIFY_DEG, preserve_topology=True)
+    return adm1, out
+
+
+def country_borders(adm1: gpd.GeoDataFrame, iso: str, spec: dict, sea_path: Path) -> gpd.GeoDataFrame:
+    """The land borders the viewer draws instead of the basemap's.
+
+    The country's own border is the outer edge of its districts, claims
+    included, except where it meets the open sea (Natural Earth 0 m bathymetry);
+    the islands of the coast have none. The borders between the other countries
+    come from Natural Earth as they are.
+    """
+    lines = gpd.read_file(ROOT / spec["path"], bbox=tuple(spec["bbox"])).to_crs(adm1.crs)
+    own = (lines["ADM0_A3_L"] == iso) | (lines["ADM0_A3_R"] == iso)
+    country = unary_union(adm1.geometry)
+    mainland = [p for p in getattr(country, "geoms", [country]) if p.area > ISLAND_DEG2]
+    sea = unary_union(gpd.read_file(sea_path, bbox=country.bounds).to_crs(adm1.crs).geometry)
+    # Natural Earth's sea runs some 50 km up the Corantijn and Marowijne
+    # estuaries; without its narrow inlets it ends at their mouths.
+    sea = sea.buffer(-ESTUARY_DEG).buffer(ESTUARY_DEG)
+    border = unary_union([p.exterior for p in mainland]).difference(sea.buffer(COAST_DEG))
+    # What is left of the coast comes out in short pieces; the borders are long.
+    border = unary_union([g for g in getattr(border, "geoms", [border]) if g.length > BORDER_MIN_DEG])
+    out = gpd.GeoDataFrame(
+        [{"kind": "own", "geometry": border}]
+        # Where a neighbour's line runs along the country's edge (Natural Earth
+        # gives the claimed areas to the neighbours), the country's border is enough.
+        + [{"kind": "other", "geometry": g.difference(country.buffer(2 * SIMPLIFY_DEG))}
+           for g in lines[~own].geometry.clip(box(*spec["bbox"]))],
+        crs=adm1.crs)
+    out["geometry"] = out.geometry.simplify(SIMPLIFY_DEG, preserve_topology=True)
+    return out
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--country", required=True)
@@ -164,8 +253,17 @@ def main() -> None:
     code = bnd["adm0_pcode"]
     adm1 = gpd.read_file(ROOT / bnd["path"].format(level=1))
     adm1 = adm1[adm1["ADM0_PCODE"] == code][["ADM1_PCODE", "ADM1_EN", "geometry"]]
+    adm1 = adm1.rename(columns={"ADM1_PCODE": "adm1", "ADM1_EN": "name"}).reset_index(drop=True)
+    claimed = config["context"].get("claimed_areas")
+    if claimed:
+        adm1, disputed = claimed_areas(adm1, claimed)
+        disputed.to_file(out_dir / "disputed.geojson", driver="GeoJSON", COORDINATE_PRECISION=5)
+    borders = config["context"].get("country_borders")
+    if borders:
+        sea_0m = ROOT / config["context"]["bathymetry"]["path"] / "ne_10m_bathymetry_L_0.shp"
+        country_borders(adm1, iso, borders, sea_0m).to_file(out_dir / "borders.geojson", driver="GeoJSON",
+                                                            COORDINATE_PRECISION=5)
     adm1["geometry"] = adm1.geometry.simplify(SIMPLIFY_DEG, preserve_topology=True)
-    adm1 = adm1.rename(columns={"ADM1_PCODE": "adm1", "ADM1_EN": "name"})
     adm1.to_file(out_dir / "adm1.geojson", driver="GeoJSON", COORDINATE_PRECISION=5)
     adm1_name = dict(zip(adm1["adm1"], adm1["name"]))
     adm2 = gpd.read_file(ROOT / bnd["path"].format(level=2), columns=["ADM0_PCODE", "ADM2_PCODE", "ADM2_EN"],
@@ -313,6 +411,10 @@ def main() -> None:
                    for k in ("annex", "bidding", "source") if k in spec]
     if sea:
         inputs.append(sea["manifest"])
+    if claimed:
+        inputs.append(claimed["manifest"])
+    if borders:
+        inputs.append(borders["manifest"])
     manifest = {
         "country": iso,
         "built_on": date.today().isoformat(),
